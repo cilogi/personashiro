@@ -41,7 +41,6 @@ public class UserDAO extends DAOBase {
     static {
         ObjectifyService.register(GaeUser.class);
         ObjectifyService.register(GaeUserCounter.class);
-        ObjectifyService.register(RegistrationString.class);
     }
 
     public UserDAO() {
@@ -55,6 +54,7 @@ public class UserDAO extends DAOBase {
      * @return the user, after changes
      */
     public GaeUser saveUser(GaeUser user, boolean changeCount) {
+        user.register();
         ofy().put(user);
         userCache.remove(user.getName());
         if (changeCount) {
@@ -68,17 +68,6 @@ public class UserDAO extends DAOBase {
         userCache.remove(user.getName());
         changeCount(-1L);
         return user;
-    }
-
-    public RegistrationString saveRegistration(String registrationString, String userName) {
-        RegistrationString reg = new RegistrationString(registrationString, userName, REGISTRATION_VALID_DAYS, TimeUnit.DAYS);
-        ofy().put(reg);
-        return reg;
-    }
-
-    public String findUserNameFromValidCode(String code) {
-        RegistrationString reg = ofy().find(new Key<RegistrationString>(RegistrationString.class, code));
-        return (reg == null) ?  null : (reg.isValid() ? reg.getUsername() : null);
     }
 
     public GaeUser findUser(String userName) {
@@ -96,27 +85,6 @@ public class UserDAO extends DAOBase {
         }
     }
 
-    /**
-     * Given a registration we have to retrieve it, and if its valid
-     * update the associated user and then delete the registration.  This isn't
-     * transactional and we may end up with a dangling RegistrationString, which
-     * I can't see as too much of a problem, although they will need to be cleaned up with
-     * a task on a regular basis (after they expire)..
-     * @param code  The registration code
-     * @param userName the user name for the code
-     */
-    public void register(final String code, final String userName) {
-        GaeUser user = ofy().find(new Key<GaeUser>(GaeUser.class, userName));
-        if (user != null) {
-            user.register();
-            ofy().put(user);
-            userCache.remove(userName);
-        }
-        RegistrationString reg = ofy().find(new Key<RegistrationString>(RegistrationString.class, code));
-        if (reg != null) {
-            ofy().delete(reg);
-        }
-    }
 
     public long getCount() {
         GaeUserCounter count = ofy().find(GaeUserCounter.class, GaeUserCounter.COUNTER_ID);

@@ -38,7 +38,7 @@ public class DatastoreRealm extends AuthorizingRealm {
     private final UserDAO userDAO;
 
     public DatastoreRealm() {
-        super(new MemcacheManager(), theCredentials());
+        super(new MemcacheManager());
         this.userDAO = new UserDAO();
 
         LOG.fine("Creating a new instance of DatastoreRealm");
@@ -61,8 +61,7 @@ public class DatastoreRealm extends AuthorizingRealm {
         }
         LOG.fine("Found " + userName + " in DB");
 
-        SimpleAccount account = new SimpleAccount(user.getName(),
-                user.getPasswordHash(), new SimpleByteSource(user.getSalt()), getName());
+        SimpleAccount account = new SimpleAccount(user.getName(), "password",  getName());
         account.setRoles(user.getRoles());
         account.setStringPermissions(user.getPermissions());
         return account;
@@ -86,14 +85,8 @@ public class DatastoreRealm extends AuthorizingRealm {
         return info;
     }
 
-    private static CredentialsMatcher theCredentials() {
-        HashedCredentialsMatcher credentials = new HashedCredentialsMatcher(GaeUser.HASH_ALGORITHM);
-        credentials.setHashIterations(GaeUser.HASH_ITERATIONS);
-        credentials.setStoredCredentialsHexEncoded(true);
-        return credentials;
-    }
 
     private static boolean userIsNotQualified(GaeUser user) {
-        return !user.isRegistered() || user.isSuspended();
+        return user.isSuspended();
     }
 }

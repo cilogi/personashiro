@@ -132,7 +132,7 @@ public class UserListServlet extends BaseServlet {
         GaeUser user = dao.findUser("user0@acme.com");
         if (user == null) {
             for (int i = 0; i < 100; i++) {
-                user = new GaeUser("user" + i + "@acme.com", "acme", Sets.newHashSet("user"), Sets.<String>newHashSet());
+                user = new GaeUser("user" + i + "@acme.com", Sets.newHashSet("user"), Sets.<String>newHashSet());
                 dao.saveUser(user, true);
             }
         }

@@ -1,5 +1,6 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+<script src="https://login.persona.org/include.js"></script>
 
 <script src="${staticBaseUrl}js/lib/jquery.tmpl.min.js"></script>
 <script src="${staticBaseUrl}js/lib/jquery.validate.min.js"></script>

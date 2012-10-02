@@ -59,15 +59,9 @@ public class ServeModule extends ServletModule {
                 "number_format", "0.###"
         ));
         serve(userBaseUrl + "/ajaxLogin").with(LoginServlet.class);
-        serve(userBaseUrl + "/register").with(RegisterServlet.class);
-        serve(userBaseUrl + "/registermail").with(MailQueueServlet.class);
-        serve(userBaseUrl + "/confirm").with(ConfirmServlet.class);
         serve(userBaseUrl + "/status").with(StatusServlet.class);
         serve(userBaseUrl + "/list").with(UserListServlet.class);
         serve(userBaseUrl + "/suspend").with(UserSuspendServlet.class);
-        serve(userBaseUrl + "/settings").with(SettingsServlet.class);
-            // this one is here so that the default login filter works
-        serve("/login.jsp").with(LoginJSPServlet.class);
             // Lets check mail to see when stuff bounces
         serve("/_ah/mail/*").with(MailReceiveServlet.class);
         serve("/appstats/*").with(AppstatsServlet.class);

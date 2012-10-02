@@ -52,13 +52,6 @@ public class GaeUser implements Serializable {
     @Id
     private String name;
 
-    private String passwordHash;
-
-    /** The salt, used to make sure that a dictionary attack is harder given a list of all the
-     *  hashed passwords, as each salt will be different.
-     */
-    private byte[] salt;
-
     private Set<String> roles;
 
     private Set<String> permissions;
@@ -74,23 +67,20 @@ public class GaeUser implements Serializable {
         this.permissions = new HashSet<String>();
     }
     
-    GaeUser(String name, String password) {
-        this(name, password, new HashSet<String>(), new HashSet<String>());
+    GaeUser(String name) {
+        this(name, new HashSet<String>(), new HashSet<String>());
     }
     
-    public GaeUser(String name, String password, Set<String> roles, Set<String> permissions) {
-        this(name, password, roles, permissions, false);
+    public GaeUser(String name, Set<String> roles, Set<String> permissions) {
+        this(name, roles, permissions, false);
     }
 
-    GaeUser(String name, String password, Set<String> roles, Set<String> permissions, boolean isRegistered) {
+    GaeUser(String name, Set<String> roles, Set<String> permissions, boolean isRegistered) {
         Preconditions.checkNotNull(name, "User name (email) can't be null");
-        Preconditions.checkNotNull(password, "User password can't be null");
         Preconditions.checkNotNull(roles, "User roles can't be null");
         Preconditions.checkNotNull(permissions, "User permissions can't be null");
         this.name = name;
 
-        this.salt = salt().getBytes();
-        this.passwordHash = hash(password, salt);
         this.roles = Collections.unmodifiableSet(roles);
         this.permissions = Collections.unmodifiableSet(permissions);
         this.dateRegistered = isRegistered ? new Date() : null;
@@ -103,12 +93,6 @@ public class GaeUser implements Serializable {
 
     public void setSuspended(boolean suspended) {
         isSuspended = suspended;
-    }
-
-    public void setPassword(String password) {
-        Preconditions.checkNotNull(password);
-        this.salt = salt().getBytes();
-        this.passwordHash = hash(password, salt);
     }
 
     public Date getDateRegistered() {
@@ -127,14 +111,6 @@ public class GaeUser implements Serializable {
         return name;
     }
 
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-
-    public byte[] getSalt() {
-        return salt;
-    }
-
     public Set<String> getRoles() {
         return roles;
     }
@@ -143,21 +119,12 @@ public class GaeUser implements Serializable {
         return permissions;
     }
 
-    private static ByteSource salt() {
-        RandomNumberGenerator rng = new SecureRandomNumberGenerator();
-        return rng.nextBytes();
-    }
-
-    private static String hash(String password, byte[] salt) {
-        return new Sha256Hash(password, new SimpleByteSource(salt), HASH_ITERATIONS).toHex();
-    }
 
     @Override
     public boolean equals(Object o) {
         if (o instanceof GaeUser) {
             GaeUser u = (GaeUser)o;
-            return getName().equals(u.getName())
-                    && getPasswordHash().equals(u.getPasswordHash());
+            return getName().equals(u.getName());
         } else {
             return false;
         }
@@ -165,6 +132,6 @@ public class GaeUser implements Serializable {
 
     @Override
     public int hashCode() {
-        return name.hashCode() * 31 + passwordHash.hashCode();
+        return name.hashCode();
     }
 }

@@ -23,7 +23,6 @@
                 <li><a href="#guice">Guice</a></li>
                 <li><a href="#management">Manage</a></li>
                 <li><a href="#about">About</a></li>
-                <li><a id="settings" class="shiro-user" style="color:yellow" href="/settings.html">Settings</a></li>
                 <li><a id="admin" class="shiro-user" style="color:red" href="/listUsers.ftl">Admin</a></li>
             </ul>
             <#include "inc/loginoutbutton.ftl">
@@ -456,16 +455,15 @@ user = browse:*
 </body>
 <#include "inc/_foot.ftl">
 <script>
-    $(document).ready(function() {
-        prettyPrint();
-        var spin = shiro.spin.start($("#spinner"));
 
+    function doStatus(spin) {
         shiro.status.runStatus({
             success: function(data, status) {
                 spin.stop();
                 if (status == 'success') {
                     $("html").removeClass("shiro-none-active");
                     if (data.message == "known") {
+                        $("html").removeClass("shiro-guest-active");
                         $("html").addClass("shiro-user-active");
                         $("span.shiro-principal").text(data.name);
                         if (data.authenticated == "true") {
@@ -487,6 +485,12 @@ user = browse:*
                 alert("can't find status: " + xhr.responseText);
             }
         });
+    }
+
+    $(document).ready(function() {
+        prettyPrint();
+        var spin = shiro.spin.start($("#spinner"));
+        doStatus(spin);
     });
 
     $(document).ready(function() {
@@ -521,10 +525,9 @@ user = browse:*
         });
 
         $("#signOut").click(function(e) {
-            e.preventDefault();
             navigator.id.logout();
             shiro.status.clearStatus();
-            return false;
+            return true;
         });
 
         navigator.id.watch({
@@ -533,6 +536,7 @@ user = browse:*
             // A user has logged in! Here you need to:
             // 1. Send the assertion to your backend for verification and to create a session.
             // 2. Update your UI.
+            var spin = shiro.spin.start($("#spinner"));
             $.ajax({ /* <-- This example uses jQuery, but you can use whatever you'd like */
               type: 'POST',
               url: shiro.userBaseUrl+"/ajaxLogin", // This is a URL on your website.
@@ -543,12 +547,16 @@ user = browse:*
               },
               success: function(data, status, xhr) {
                   if (status == 'success') {
-                      onSuccess();
+                      doStatus(spin);
                   } else {
+                      spin.stop();
                       alert("login failed: " + data.message);
                   }
               },
-              error: function(res, status, xhr) { alert("login failure" + res); }
+              error: function(res, status, xhr) {
+                  spin.stop();
+                  alert("login failure" + res);
+              }
             });
           },
           onlogout: function() {
@@ -556,6 +564,7 @@ user = browse:*
             // Tear down the user's session by redirecting the user or making a call to your backend.
             // Also, make that loggedInUser will get set to null on the next page load.
             // (That's a literal JavaScript null. Not false, 0, or undefined. null.)
+            shiro.status.clearStatus();
             /*
             $.ajax({
               type: 'POST',

@@ -21,6 +21,9 @@
 
 package com.cilogi.shiro.web;
 
+import com.cilogi.shiro.gae.PersonaAddUser;
+import com.google.appengine.api.urlfetch.*;
+import com.google.common.base.Charsets;
 import com.google.common.collect.Maps;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -28,12 +31,15 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.util.WebUtils;
+import org.json.JSONObject;
 
 import javax.inject.Singleton;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -53,14 +59,21 @@ public class LoginServlet extends BaseServlet {
             String username = WebUtils.getCleanParam(request, USERNAME);
             boolean rememberMe = WebUtils.isTrue(request, REMEMBER_ME);
             String host = request.getRemoteHost();
-            UsernamePasswordToken token = new UsernamePasswordToken(username, password, rememberMe, host);
-            try {
-                Subject subject = SecurityUtils.getSubject();
-                loginWithNewSession(token, subject);
-                //subject.login(token);
-                issueJson(response, HTTP_STATUS_OK, MESSAGE, "ok");
-            } catch (AuthenticationException e) {
-                issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND, "cannot authorize " + username + ": " + e.getMessage(), response);
+
+            PersonaAddUser add = new PersonaAddUser(password);
+            String email = add.doAdd();
+            if (email == null) {
+                issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND, "cannot authorize " + username, response);
+            }  else {
+                UsernamePasswordToken token = new UsernamePasswordToken(email, "password", rememberMe, host);
+                try {
+                    Subject subject = SecurityUtils.getSubject();
+                    loginWithNewSession(token, subject);
+                    //subject.login(token);
+                    issueJson(response, HTTP_STATUS_OK, MESSAGE, "ok");
+                } catch (AuthenticationException e) {
+                    issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND, "cannot authorize " + username + ": " + e.getMessage(), response);
+                }
             }
         } catch (Exception e) {
             issue(MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR, "Internal error: " + e.getMessage(), response);
@@ -92,5 +105,4 @@ public class LoginServlet extends BaseServlet {
             newSession.setAttribute(key, attributes.get(key));
         }
     }
-
 }
