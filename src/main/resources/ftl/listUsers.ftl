@@ -64,7 +64,7 @@
     </div>
 
     <footer>
-        <p>&copy; Cilogi Limited 2011</p>
+        <p>&copy; Cilogi Limited 2012</p>
     </footer>
 
 </div>

@@ -37,7 +37,6 @@ interface ParameterNames {
     String FORGOT = "forgot";
     String INVALIDATE_CACHE = "invalidateCache";
     String PASSWORD = "password";
-    String REGISTRATION_STRING = "registrationString";
     String REMEMBER_ME = "rememberMe";
     String SUSPEND = "suspend";
     String USERNAME = "username";

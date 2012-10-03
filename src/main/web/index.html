@@ -62,8 +62,9 @@ body {
                 <li class="active"><a href="#">Home</a></li>
                 <li><a href="#what">What</a></li>
                 <li><a href="#motivation">Motivation</a></li>
+                <li><a href="#persona">Persona</a></li>
                 <li><a href="#shiro">Shiro</a></li>
-                <li><a href="#guice">Guice</a></li>
+                <li><a href="#persona">Persona</a></li>
                 <li><a href="#management">Manage</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a id="admin" class="shiro-user" style="color:red" href="/listUsers.ftl">Admin</a></li>
@@ -84,20 +85,16 @@ body {
 <!-- Main hero unit for a primary marketing message or call to action -->
 <div class="hero-unit">
     <div class="semi">
-        <h1>Shiro on App Engine</h1>
+        <h1>Shiro & Persona on GAE</h1>
 
         <p></p>
 
         <p>A demonstration which shows one way of integrating <a href="http://shiro.apache.org/">Shiro security</a>
             with <a href="http://code.google.com/appengine/">App Engine</a> and
-            <a href="http://code.google.com/p/google-guice/">Google Guice</a>.
+            <a href="http://www.mozilla.org/en-US/persona//">Mozilla Persona</a>.
 
-        <p> Front end user registration and password management is also provided in as minimalistic
-            a fashion as we could manage</p>
+        <p>Identity management comes from Persona, authorization from Shiro.</p>
 
-        <div class="shiro-guest">
-            <p><a href="/register.ftl" class="btn primary large">Register &raquo;</a></p>
-        </div>
     </div>
 </div>
 
@@ -112,57 +109,21 @@ body {
                 Caching comes via App Engine's memcached service.</p>
         </div>
         <div class="span5">
-            <h6>Guice and Shiro</h6>
+            <h6>Persona and Shiro</h6>
 
-            <p>Shiro's <a href="http://shiro.apache.org/java-annotations-list.html">AOP</a> features,
-               specifically the method annotations, work with Guice. Otherwise
-               Shiro configuration is done with the Shiro ini file.</p>
+            <p>Persona takes care of all the authentication, providing a verified Email.  Shiro
+               can then take care of the authorization aspects of the application.</p>
         </div>
         <div class="span5">
             <h6>Fork on Github</h6>
 
             <p>Get the code, file issues, etc. on the Github repository</p>
 
-            <p><a class="btn primary" href="https://github.com/cilogi/gaeshiro">GAEShiro on GitHub &raquo;</a></p>
+            <p><a class="btn primary" href="https://github.com/cilogi/gaeshiro">PersonaShiro on GitHub &raquo;</a></p>
         </div>
     </div>
 </div>
-<section id="what">
-    <div class="page-header">
-        <h1>What
-            <small>can you do with the demo?</small>
-        </h1>
-    </div>
-    <div class="row">
-        <div class="span4">
-            <h2>You can</h2>
 
-            <p>Sign in as admin or user,</p>
-
-            <p>register with an Email address,</p>
-
-            <p>forget or change your password,</p>
-
-            <p> and suspend users as an administrator</p>
-        </div>
-        <div class="span9">
-            <p>You can sign in from the link at the top right.  There are two built-in accounts you
-               can user, <code>zenith@acme.com</code> and <code>nadir@acme.com</code>.
-                Both have password <code>pass</code>.  The <code>zenith</code> account is an admin, and
-                can do more than <code>nadir</code> which is a normal user account.  The dummy accounts,
-                of the form <code>userN@acme.com</code>all have the password <code>acme</code></p>
-            <p>You can also register for an account.  You need to provide an Email which you control for this
-               as a registration code will be sent to this Email address.  Once you're registered you can use this
-               account, unless someone suspends it.</p>
-            <p>If you forget your password you can reset it.  An email is sent to you with a code and a link. Either
-               enter the code or follow the link to do the reset.</p>
-            <p>When logged in as <code>zenith</code> you can list users and choose whether to suspend them or not.
-               A suspended user cannot login.</p>
-            <p>In practice all the URLs must run under <code>HTTPS</code>, since passwords are contained in the
-               HTTP requests. This demo does <em>not</em> use <code>HTTPS</code> so be warned!</p>
-        </div>
-    </div>
-</section>
 
 <section id="motivation">
     <div class="page-header">
@@ -180,14 +141,16 @@ body {
 
             <p>and doesn't come with a general authentication and authorization service.</p>
 
-            <p>Shiro is good for this and
+            <p>Persona is an interesting take on identity management, and</p>
+
+            <p>Shiro is good for authorization and
                 we've done the needed porting, and</p>
 
             <p>provided some simple user management.</p>
 
             <p>Guice is used to glue things together</p>
 
-            <p>even though it slows down startup.</p>
+            <p>even though it slows down startup on App Engine somewhat.</p>
 
         </div>
         <div class="span9">
@@ -197,7 +160,7 @@ body {
                 needed.</p>
 
             <p>With scalability comes a set of restrictions and limitations. Interfaces are
-                non-standard: in particular you don't get SQL (its coming), so persistent storage and retrieval are
+                non-standard: so persistent storage and retrieval are
                 'different'. Application instances are started on demand, so startup must be rapid. Startup is a
                 particular challenge for Java which is known to initialize with the alacrity of a drowsy snail.
                 App Engine charges for resources so you need to be careful to minimise use.</p>
@@ -206,7 +169,12 @@ body {
                public, who don't have or don't want use a Google login. Even with a user service many sites
                also need a permissions system to decide who gets to access what.</p>
 
-            <p><a href="http://shiro.apache.org/">Shiro</a> is a lightweight system for Authentication
+            <p>Persona is an interesting new approach to identity management.  It provides a secure way
+               for users to authenticate with web sites using their Email addresses.  This (for me) is more
+               convenient than OpenID, as one usually wants the Email address anyway.  Unlike other systems
+               the email is the <em>only</em> information that gets given to the website.</p>
+
+            <p><a href="http://shiro.apache.org/">Shiro</a> is a lightweight system for authentication
                 and authorization. Startup on App Engine for Shiro seems to be about 1 second (on top of other
                 components of course), which is faster than for a heavier stack such as
                 <a href="http://static.springsource.org/spring-security/site/">Spring Security</a>.
@@ -214,10 +182,8 @@ body {
                 new instances in response to demand. So, Shiro is a good fit with App Engine and its worth
                 making the adaptation to the Datastore and Memcached services.</p>
 
-            <p>If you're not using the built-in authentication system for Google email addresses then you'll
-                likely want a basic system for user password management. Even if your preference is for a
-                federated login you'll probably still need your own system for those users that don't want to use
-                or can't use the federated system. This sample provides a basic password management system
+            <p>If you're not using the built-in authentication system for Google email addresses on App Engine then you'll
+                likely want a basic system for user password management.  This sample provides a basic identity management system
                 which can easily be extended, or used as-is</p>
 
             <p>The fastest way to run App Engine is with basic servlets run from <code>web.xml</code>.
@@ -238,6 +204,39 @@ body {
         </div>
     </div>
 </section>
+
+<section id="persona">
+    <div class="page-header">
+        <h1>Interfacing Persona
+            <small>step by step</small>
+        </h1>
+    </div>
+    <div class="row">
+        <div class="span4">
+            <h2>In Brief</h2>
+
+            <p>We have made a minor change to <code>UsernamePasswordToken</code> authentication</p>
+
+            <p>We've hacked in authentication for sensitive areas, keeping the registered/authenticated distinction.</p>
+        </div>
+        <div class="span9">
+            <p>Persona does most of its work in JavaScript, inside an Iframe.  An identity <em>assertion</em> is generated
+               client-side which contains all the information required to authenticate.  We cheat a little and use the
+               <code>UsernamePasswordToken</code> to encode this, with the initial username being just a dummy, and the
+               assertion being in the password.  The token is used in our <code>DatastoreRealm</code> class to communicate
+               with the Persona server and (a) authenticate the user and (b) recover the user's Email address.
+            </p>
+            <p>Shiro makes the useful distinction between a <em>remembered</em> users (who were previously logged in
+               and for whom there is a cookie in their browser, and <em>authenticated</em> users, who have been authenticated in
+               the current session.  We have fiddled a little to keep this property.  If you try to access a protected page then
+               you get a new Persona popup asking you to choose your identity.  I'm not quite sure how useful this is, as
+               persona will authenticate (I believe) over more than just 1 session.  So, if you're concerned about this it may
+               be better <em>not</em> to allow users to be remembered, or not to use Persona.
+            </p>
+        </div>
+    </div>
+</section>
+
 <section id="shiro">
     <div class="page-header">
         <h1>Adapting Shiro
@@ -340,8 +339,7 @@ gaeRealm = com.cilogi.shiro.gae.DatastoreRealm
 securityManager.realms = $iniRealm, $gaeRealm
 
 [users]
-zenith@acme.com = pass, user, admin
-nadir@acme.com = pass, user
+tim.niblett@cilogi.com
 
 [roles]
 admin = *
@@ -499,42 +497,6 @@ user = browse:*
 </footer>
 
 </div>
-  <div id="modal-login" class="modal hide fade" style="padding-bottom: 1em;">
-    <div class="modal-header">
-        <a href="#" class="close">&times;</a>
-        <h3>Please login <span class="loginReason"></span></h3>
-    </div>
-    <form id="loginForm" method="POST" action="">
-    <fieldset>
-        <div class="clearfix">
-            <label for="username">Email Address</label>
-            <div class="input">
-                <input class="required email xlarge" id="username" name="username"
-                       size="30" type="text"/>
-            </div>
-        </div>
-        <div class="clearfix">
-            <label for="password">Password</label>
-
-            <div class="input">
-                <input class="required xlarge" id="password" name="password" size="30" type="password"/>
-            </div>
-            <a id="loginForgot" style="margin-left:150px;" href="/register.ftl?forgot=true">Forgot your password?</a>
-        </div>
-      <!-- /clearfix -->
-        <div class="clearfix">
-            <label for="rememberMe" style="padding-top: 0;">Remember me</label>
-            <div class="input">
-                <input id="rememberMe" name="rememberMe" type="checkbox"/>
-            </div>
-        </div>
-    </fieldset>
-    <div class="actions">
-        <button id="modalLogin" type="submit" class="btn primary">Login</button>
-    </div>
-</form>
-<a id="loginRegister" href="/register.ftl" style="margin-left: 1em; margin-bottom: 1em;">Register</a>
-  </div>
 </body>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
@@ -559,7 +521,7 @@ user = browse:*
 <script type="text/javascript">
 
   var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-27131467-1']);
+  _gaq.push(['_setAccount', 'UA-27131467-3']);
   _gaq.push(['_trackPageview']);
 
   (function() {
