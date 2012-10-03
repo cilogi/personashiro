@@ -1,6 +1,6 @@
 // Copyright (c) 2012 Tim Niblett. All Rights Reserved.
 //
-// File:        PersonaAddUser.java  (02-Oct-2012)
+// File:        PersonaFindUser.java  (02-Oct-2012)
 // Author:      tim
 //
 // Copyright in the whole and every part of this source file belongs to
@@ -30,18 +30,18 @@ import java.net.URL;
 import java.util.logging.Logger;
 
 
-public class PersonaAddUser {
-    static final Logger LOG = Logger.getLogger(PersonaAddUser.class.getName());
+public class PersonaFindUser {
+    static final Logger LOG = Logger.getLogger(PersonaFindUser.class.getName());
 
     private static final String PERSONA_VERIFY_URL = "https://verifier.login.persona.org/verify";
 
     private final JSONObject json;
 
-    public PersonaAddUser(String token) {
+    public PersonaFindUser(String token) {
         json = doPersonaCheck(token, "http://localhost:8080");
     }
 
-    public String doAdd() {
+    public String doFind() {
         if (isOkay()) {
             UserDAO dao = new UserDAO();
             String email = userEmail();

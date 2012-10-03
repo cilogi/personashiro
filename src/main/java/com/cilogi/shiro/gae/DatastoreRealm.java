@@ -46,7 +46,7 @@ public class DatastoreRealm extends AuthorizingRealm {
 
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-        String userName = ((UsernamePasswordToken) token).getUsername();
+        String userName = findUserName((UsernamePasswordToken) token);
         return doGetAuthenticationInfo(userName);
     }
 
@@ -88,5 +88,14 @@ public class DatastoreRealm extends AuthorizingRealm {
 
     private static boolean userIsNotQualified(GaeUser user) {
         return user.isSuspended();
+    }
+
+    private static String findUserName(UsernamePasswordToken token) {
+        PersonaFindUser add = new PersonaFindUser(new String(token.getPassword()));
+        String userName = add.doFind();
+        token.setUsername(userName);
+        token.setPassword("password".toCharArray());
+        return userName;
+
     }
 }
