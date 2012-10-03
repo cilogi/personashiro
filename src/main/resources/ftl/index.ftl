@@ -1,4 +1,4 @@
-<#assign title="Shiro on GAE">
+<#assign title="Shiro and Persona on GAE">
 <#assign style="mainstyle.css">
 <!DOCTYPE html>
 <html lang="en" class="shiro-none-active">
@@ -171,11 +171,11 @@
             <p>We've hacked in authentication for sensitive areas, keeping the registered/authenticated distinction.</p>
         </div>
         <div class="span9">
-            <p>Persona does most of its work in JavaScript, inside an Iframe.  An identity <em>assertion</em> is generated
+            <p>Persona does most of its work in JavaScript, inside an <code>iframe</code>.  An identity <em>assertion</em> is generated
                client-side which contains all the information required to authenticate.  We cheat a little and use the
                <code>UsernamePasswordToken</code> to encode this, with the initial username being just a dummy, and the
                assertion being in the password.  The token is used in our <code>DatastoreRealm</code> class to communicate
-               with the Persona server and (a) authenticate the user and (b) recover the user's Email address.
+               with the Persona server to (a) authenticate the user, and (b) to recover the user's Email address.
             </p>
             <p>Shiro makes the useful distinction between a <em>remembered</em> users (who were previously logged in
                and for whom there is a cookie in their browser, and <em>authenticated</em> users, who have been authenticated in

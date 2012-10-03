@@ -3,7 +3,7 @@
 <head>
 
 <meta charset="utf-8">
-<title>Shiro on GAE</title>
+<title>Shiro and Persona on GAE</title>
 <meta name="description" content="">
 <meta name="author" content="">
 
@@ -12,15 +12,15 @@
 <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
 
-<link href="http://static.gaeshiro.appspot.com/css/dataTables/demo_table.css" type="text/css" rel="stylesheet">
+<link href="css/dataTables/demo_table.css" type="text/css" rel="stylesheet">
 
 
 <!-- Le styles -->
-<link href="http://static.gaeshiro.appspot.com/css/bootstrap.css" type="text/css" rel="stylesheet">
-<link href="http://static.gaeshiro.appspot.com/assets/css/docs.css" type="text/css" rel="stylesheet">
-<link href="http://static.gaeshiro.appspot.com/css/login.css" type="text/css" rel="stylesheet">
-<link href="http://static.gaeshiro.appspot.com/css/local.css" type="text/css" rel="stylesheet">
-<link href="http://static.gaeshiro.appspot.com/assets/js/google-code-prettify/prettify.css" type="text/css" rel="stylesheet">
+<link href="css/bootstrap.css" type="text/css" rel="stylesheet">
+<link href="assets/css/docs.css" type="text/css" rel="stylesheet">
+<link href="css/persona-buttons.css" type="text/css" rel="stylesheet">
+<link href="css/local.css" type="text/css" rel="stylesheet">
+<link href="assets/js/google-code-prettify/prettify.css" type="text/css" rel="stylesheet">
 
 <style type="text/css">
 body {
@@ -43,10 +43,10 @@ body {
 
 
 <!-- Le fav and touch icons -->
-<link rel="shortcut icon" href="http://static.gaeshiro.appspot.com/images/favicon.ico">
-<link rel="apple-touch-icon" href="http://static.gaeshiro.appspot.com/images/apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="72x72" href="http://static.gaeshiro.appspot.com/images/apple-touch-icon-72x72.png">
-<link rel="apple-touch-icon" sizes="114x114" href="http://static.gaeshiro.appspot.com/images/apple-touch-icon-114x114.png">
+<link rel="shortcut icon" href="images/favicon.ico">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
 </head>
 
 <body>
@@ -69,7 +69,7 @@ body {
                 <li><a id="admin" class="shiro-user" style="color:red" href="/listUsers.ftl">Admin</a></li>
             </ul>
 <ul class="nav secondary-nav shiro-guest">
-    <li><a id="signIn" href="#">Sign In</a></li>
+    <li><a id="signIn" href="#"><img src="../images/persona_sign_in_red.png" alt="Sign in with Persona"></a></li>
 </ul>
 <ul class="nav secondary-nav shiro-user">
    <li><a id="signOut" href="/logout">Sign Out <span class="shiro-principal"></span></a></li>
@@ -219,11 +219,11 @@ body {
             <p>We've hacked in authentication for sensitive areas, keeping the registered/authenticated distinction.</p>
         </div>
         <div class="span9">
-            <p>Persona does most of its work in JavaScript, inside an Iframe.  An identity <em>assertion</em> is generated
+            <p>Persona does most of its work in JavaScript, inside an <code>iframe</code>.  An identity <em>assertion</em> is generated
                client-side which contains all the information required to authenticate.  We cheat a little and use the
                <code>UsernamePasswordToken</code> to encode this, with the initial username being just a dummy, and the
                assertion being in the password.  The token is used in our <code>DatastoreRealm</code> class to communicate
-               with the Persona server and (a) authenticate the user and (b) recover the user's Email address.
+               with the Persona server to (a) authenticate the user, and (b) to recover the user's Email address.
             </p>
             <p>Shiro makes the useful distinction between a <em>remembered</em> users (who were previously logged in
                and for whom there is a cookie in their browser, and <em>authenticated</em> users, who have been authenticated in
@@ -501,21 +501,20 @@ user = browse:*
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 <script src="https://login.persona.org/include.js"></script>
 
-<script src="http://static.gaeshiro.appspot.com/js/lib/jquery.tmpl.min.js"></script>
-<script src="http://static.gaeshiro.appspot.com/js/lib/jquery.validate.min.js"></script>
-<script src="http://static.gaeshiro.appspot.com/js/lib/spin.min.js"></script>
-<script src="http://static.gaeshiro.appspot.com/js/lib/jquery.busy.min.js"></script>
+<script src="js/lib/jquery.tmpl.min.js"></script>
+<script src="js/lib/jquery.validate.min.js"></script>
+<script src="js/lib/spin.min.js"></script>
+<script src="js/lib/jquery.busy.min.js"></script>
 
-<script src="http://static.gaeshiro.appspot.com/assets/js/google-code-prettify/prettify.js"></script>
+<script src="assets/js/google-code-prettify/prettify.js"></script>
 
-<script src="http://static.gaeshiro.appspot.com/js/bootstrap/bootstrap-scrollspy.js"></script>
-<script src="http://static.gaeshiro.appspot.com/js/bootstrap/bootstrap-modal.js"></script>
+<script src="js/bootstrap/bootstrap-scrollspy.js"></script>
+<script src="js/bootstrap/bootstrap-modal.js"></script>
 
-<script src="http://static.gaeshiro.appspot.com/js/init.js"></script>
-<script src="http://static.gaeshiro.appspot.com/js/spin.js"></script>
-<script src="http://static.gaeshiro.appspot.com/js/log.js"></script>
-<script src="http://static.gaeshiro.appspot.com/js/status.js"></script>
-<script src="http://static.gaeshiro.appspot.com/js/login.js"></script>
+<script src="js/init.js"></script>
+<script src="js/spin.js"></script>
+<script src="js/log.js"></script>
+<script src="js/status.js"></script>
 
 <script type="text/javascript">
 
