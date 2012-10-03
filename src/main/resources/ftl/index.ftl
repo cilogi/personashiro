@@ -70,7 +70,7 @@
 
             <p>Get the code, file issues, etc. on the Github repository</p>
 
-            <p><a class="btn primary" href="https://github.com/cilogi/gaeshiro">PersonaShiro on GitHub &raquo;</a></p>
+            <p><a class="btn primary" href="https://github.com/cilogi/personashiro">PersonaShiro on GitHub &raquo;</a></p>
         </div>
     </div>
 </div>

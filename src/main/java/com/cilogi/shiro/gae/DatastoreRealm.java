@@ -19,6 +19,7 @@
 
 package com.cilogi.shiro.gae;
 
+import com.google.appengine.api.utils.SystemProperty;
 import com.google.common.base.Preconditions;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
@@ -29,6 +30,7 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.SimpleByteSource;
 
+import java.util.Properties;
 import java.util.logging.Logger;
 
 
@@ -40,8 +42,8 @@ public class DatastoreRealm extends AuthorizingRealm {
     public DatastoreRealm() {
         super(new MemcacheManager());
         this.userDAO = new UserDAO();
-
-        LOG.fine("Creating a new instance of DatastoreRealm");
+        SystemProperty.Environment.Value server = SystemProperty.environment.value();
+        LOG.fine("Creating a new instance of DatastoreRealm for env " + server);
     }
 
     @Override

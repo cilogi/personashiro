@@ -21,6 +21,7 @@
 package com.cilogi.shiro.gae;
 
 import com.google.appengine.api.urlfetch.*;
+import com.google.appengine.api.utils.SystemProperty;
 import com.google.common.base.Charsets;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,7 +39,7 @@ public class PersonaFindUser {
     private final JSONObject json;
 
     public PersonaFindUser(String token) {
-        json = doPersonaCheck(token, "http://localhost:8080");
+        json = doPersonaCheck(token, hostName());
     }
 
     public String doFind() {
@@ -99,6 +100,15 @@ public class PersonaFindUser {
 
     private static URL personaCheckURL(String token, String host) throws MalformedURLException {
         return new URL(PERSONA_VERIFY_URL + "?assertion=" + token + "&audience=" + host);
+    }
+
+    private static String hostName() {
+        return isDevelopmentServer() ? "localhost:8080" : "personashiro.appspot.com";
+    }
+
+    private static boolean isDevelopmentServer() {
+        SystemProperty.Environment.Value server = SystemProperty.environment.value();
+        return server == SystemProperty.Environment.Value.Development;
     }
 
 }
