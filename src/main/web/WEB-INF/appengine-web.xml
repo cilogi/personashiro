@@ -12,10 +12,6 @@ xsi:schemaLocation="http://appengine.google.com/ns/1.0 http://googleappengine.go
     <sessions-enabled>true</sessions-enabled>
     <async-session-persistence enabled="true" queue-name="default"/>
 
-    <inbound-services>
-      <service>mail</service>
-    </inbound-services>
-
     <static-files>
         <include path="**" expiration="10m"/>
         <include path="/images/*" expiration="10m"/>
