@@ -213,16 +213,6 @@
             <artifactId>json</artifactId>
             <version>20090211</version>
         </dependency>
-        <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
-            <version>1.4.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mindrot</groupId>
-            <artifactId>jbcrypt</artifactId>
-            <version>0.3m</version>
-        </dependency>
     </dependencies>
 
 
@@ -239,7 +229,6 @@
                     <warSourceDirectory>${basedir}/src/main/web</warSourceDirectory>
                     <packagingExcludes>WEB-INF/web.xml</packagingExcludes>
                     <webResources>
-                        <!--
                         <resource>
                             <directory>src/main/web</directory>
                             <filtering>true</filtering>
@@ -257,7 +246,6 @@
                                 <include>assets/**</include>
                             </includes>
                         </resource>
-                        -->
                     </webResources>
                 </configuration>
             </plugin>
