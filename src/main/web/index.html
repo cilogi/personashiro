@@ -64,7 +64,6 @@ body {
                 <li><a href="#motivation">Motivation</a></li>
                 <li><a href="#persona">Persona</a></li>
                 <li><a href="#shiro">Shiro</a></li>
-                <li><a href="#management">Manage</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a id="admin" class="shiro-user" style="color:red" href="/listUsers.ftl">Admin</a></li>
             </ul>
@@ -225,12 +224,12 @@ body {
                assertion being in the password.  The token is used in our <code>DatastoreRealm</code> class to communicate
                with the Persona server to (a) authenticate the user, and (b) to recover the user's Email address.
             </p>
-            <p>Shiro makes the useful distinction between a <em>remembered</em> users (who were previously logged in
+            <p>Shiro makes the useful distinction between a <em>remembered</em> users who were previously logged in
                and for whom there is a cookie in their browser, and <em>authenticated</em> users, who have been authenticated in
                the current session.  We have fiddled a little to keep this property.  If you try to access a protected page then
                you get a new Persona popup asking you to choose your identity.  I'm not quite sure how useful this is, as
                persona will authenticate (I believe) over more than just 1 session.  So, if you're concerned about this it may
-               be better <em>not</em> to allow users to be remembered, or not to use Persona.
+               be better either <em>not</em> to allow users to be remembered, or not to use Persona.
             </p>
         </div>
     </div>
@@ -287,10 +286,7 @@ body {
                 is of limited size and evicts after 5 minutes, but is fast. A combination of in-memory
                 and memcached caches is the best way to limit hits to the data store and to minimize the
                 overall cost and the number of instances we need,</p>
-            <p>Another database object we use is a <code>RegistrationString</code>, which contains a one-shot code
-                which is sent to users by email to allow them to (a) register and (b) change passwords. This code
-                is time-limited so that archived emails don't cause a problem.</p>
-            <p>The final database object is a counter to keep track of the number of users we have.  Its
+             <p>The final database object is a counter to keep track of the number of users we have.  Its
                too inefficient to count users when the number is large so a counter is needed.  We don't expect
                the counter to be changed very often (not more than once a second) so there's no need for fancy
                tricks like sharding.</p>
@@ -307,6 +303,8 @@ body {
         <div class="span4">
             <h2>The pith</h2>
 
+            <p>Guice helps simplify the code somewhat.</p>
+
             <p>We have adapted realms and caches.</p>
 
             <p>Objectify is used to interface to the datastore</p>
@@ -314,10 +312,12 @@ body {
             <p>In memory caches are combined with memcached to keep things fast and cheap.</p>
         </div>
         <div class="span9">
+            <p>Guice is a lightweight alternative to Spring.  Its useful, in that it makes the code
+               somewhat easier to organize.  It will slow down startup somewhat, although less than Spring would.</p>
             <p>There are a couple of ways to go when interfacing a system such as Shiro with Guice. We can
                 do the minimum necessary to interface Guice and Shiro or we can try a deeper integration where
                 Shiro can be fully configured inside Guice.</p>
-            <p>Shiro 1.2 will include a Guice module which goes down the second of these routes. I may be
+            <p>Shiro 1.2 includes a Guice module which goes down the second of these routes. I may be
                 missing something but I don't see much advantage to this, and the minimal approach where we
                 do as much configuration as possible from the <code>shiro.ini</code> resource file does
                 everything we need, which is three main functions.</p>
@@ -338,7 +338,8 @@ gaeRealm = com.cilogi.shiro.gae.DatastoreRealm
 securityManager.realms = $iniRealm, $gaeRealm
 
 [users]
-tim.niblett@cilogi.com
+tim.niblett@cilogi.com = password, user, admin
+tim@timniblett.net = password, user
 
 [roles]
 admin = *
@@ -346,7 +347,8 @@ user = browse:*
 
 [urls]
 /login.jsp = authc
-/settings.html = authc, roles[user]
+/listUsers.ftl = authc
+/appstats/** = authc, roles[admin]
 /logout = logout
 ...
 </pre>
@@ -360,8 +362,7 @@ user = browse:*
             tags to include text, depending on the user's status, role or permissions. The second approach,
             used on this page is to query the server, via Ajax, for your status, set class attributes depending
             on the result and use CSS rules to decide what to show.</p>
-            <p>In order to configure Shiro with Guice the following was necessary (for Shiro 1.2, Shiro 1.1 will
-                be a little different).</p>
+            <p>In order to configure Shiro with Guice the following was necessary.</p>
             <ul>
                 <li>The Shiro listener should be added to <code>web.xml</code>
 <pre class="prettyprint" lang-xml linenums>
@@ -388,65 +389,6 @@ user = browse:*
             <p>That's all it takes to configure Shiro with Guice. If you want to use the AOP annotations then
                 you will need to include the Guice module <code>com.cilogi.shiro.aop.AopModule</code> which
                 provides bindings for all of Shiro's AOP annotations.</p>
-        </div>
-    </div>
-</section>
-<section id="management">
-    <div class="page-header">
-        <h1>Manage
-            <small>users and passwords</small>
-        </h1>
-    </div>
-    <div class="row">
-        <div class="span4">
-            <h2>To summarize</h2>
-
-            <p>Users can register, choose to change password and reset a forgetten password</p>
-
-            <p>One-time. limited duration, tokens are used to provide links to unsecured change pages.</p>
-
-            <p>Registration and password change use essentially the same flow</p>
-        </div>
-        <div class="span9">
-            <p>In an ideal world applications such as our would not need to do password management. Even though
-                there are now a variety of identity providers, not all users will want to use them. So, as a
-                fallback applications must provide <em>traditional</em> password management.</p>
-
-            <p>This sample provides the basics packaged so that anyone working with App Engine can incorporate
-                it relatively simply, although presentational changes will be required.</p>
-
-            <p>In describing the flow we use relative URLs to describe processes controlled by servlets.</p>
-
-            <h2>Control flow for registration</h2>
-            <ol>
-                <li>Go to the <code>/register.ftl</code> URL. This loads a page with a registration form.
-                    The form contains an email field.
-                </li>
-                <li>The form is posted to <code>/register</code>. This is done using Ajax so we stay on the same
-                    page. An email message is sent to the user at the provided address. The email contains a code
-                    and a link. The user can either
-                    enter the code and the desired password on the page or click the link in the sent email and
-                    enter the code and password at the page which comes up.
-                    In either case
-                    we post or get to the <code>/confirm</code> URL with the code as a parameter.
-                <li>This checks the validity of the code, and if its valid
-                    adds a confirmation message to the current page. The user is logged in on hte server and
-                    we are done.
-                </li>
-            </ol>
-            <h2>Control flow for forgotten password</h2>
-
-            <p>The control flow for a forgotten password is similar to that for registration with two slight
-                differences.</p>
-            <ol>
-                <li>If the email address is already registered we don't bail out with an error message, as the
-                    presumption is that the person entering the data owns the email address.
-                </li>
-                <li>Some of the wording on the web pages is differed (Reset rather than Register). These
-                    differences can be expressed using the same template configured with slightly different
-                    arguments.
-                </li>
-            </ol>
         </div>
     </div>
 </section>
