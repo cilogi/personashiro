@@ -21,7 +21,6 @@
                 <li><a href="#motivation">Motivation</a></li>
                 <li><a href="#persona">Persona</a></li>
                 <li><a href="#shiro">Shiro</a></li>
-                <li><a href="#persona">Persona</a></li>
                 <li><a href="#management">Manage</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a id="admin" class="shiro-user" style="color:red" href="/listUsers.ftl">Admin</a></li>
@@ -502,10 +501,10 @@ user = browse:*
         });
         $("#admin").click(function(e) {
             e.preventDefault();
-            if ($("html").hasClass("shiro-admin-active")) {
+            if ($("html").hasClass("shiro-user-active")) {
                 window.location.assign("listUsers.ftl");
             } else {
-                alert("You need admin privileges to view the user list.")
+                alert("You need authentication to view the user list.")
             }
             return false;
         });
