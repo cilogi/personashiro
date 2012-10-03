@@ -80,5 +80,4 @@ public class StatusServlet extends BaseServlet {
             return false;
         }
     }
-
 }

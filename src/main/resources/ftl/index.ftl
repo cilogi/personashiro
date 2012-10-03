@@ -428,6 +428,7 @@ user = browse:*
     $(document).ready(function() {
         prettyPrint();
         var spin = shiro.spin.start($("#spinner"));
+        shiro.status.clearStatus();
         doStatus(spin);
     });
 
@@ -475,6 +476,7 @@ user = browse:*
             // 1. Send the assertion to your backend for verification and to create a session.
             // 2. Update your UI.
             var spin = shiro.spin.start($("#spinner"));
+            shiro.status.clearStatus();
             $.ajax({ /* <-- This example uses jQuery, but you can use whatever you'd like */
               type: 'POST',
               url: shiro.userBaseUrl+"/ajaxLogin", // This is a URL on your website.
@@ -485,7 +487,7 @@ user = browse:*
               },
               success: function(data, status, xhr) {
                   if (status == 'success') {
-                      doStatus(spin);
+                      doStatus(spin, false);
                   } else {
                       spin.stop();
                       alert("login failed: " + data.message);
