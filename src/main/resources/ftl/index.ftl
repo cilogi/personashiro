@@ -14,7 +14,7 @@
 <div class="topbar" data-scrollspy="scrollspy">
     <div class="topbar-inner">
         <div class="container">
-            <a class="brand" href="#">Shiro on GAE</a>
+            <a class="brand" href="#">GAEPersona</a>
             <ul class="nav">
                 <li class="active"><a href="#">Home</a></li>
                 <li><a href="#what">What</a></li>
@@ -286,8 +286,8 @@
                 minimalist position. Here is the <code>shiro.ini</code> I'm using.</p>
 <pre class="prettyprint">
 [main]
-gaeRealm = com.cilogi.shiro.gae.DatastoreRealm
-securityManager.realms = $iniRealm, $gaeRealm
+personaRealm = com.cilogi.shiro.persona.PersonaRealm
+securityManager.realms = $iniRealm, $personaRealm
 
 [users]
 tim.niblett@cilogi.com = password, user, admin

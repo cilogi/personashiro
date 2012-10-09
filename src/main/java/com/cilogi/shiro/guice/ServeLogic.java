@@ -21,11 +21,14 @@
 
 package com.cilogi.shiro.guice;
 
+import com.cilogi.shiro.gae.UserDAO;
+import com.cilogi.shiro.gae.UserDAOProvider;
 import com.cilogi.util.doc.CreateDoc;
 import com.google.appengine.tools.appstats.AppstatsFilter;
 import com.google.appengine.tools.appstats.AppstatsServlet;
 import com.google.cloud.sql.jdbc.internal.Charsets;
 import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.name.Names;
 import com.googlecode.objectify.cache.AsyncCacheFilter;
@@ -80,6 +83,11 @@ public class ServeLogic extends AbstractModule {
         } catch (TemplateModelException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Provides
+    UserDAO provideUserDAO() {
+        return UserDAOProvider.get();
     }
 
 }
