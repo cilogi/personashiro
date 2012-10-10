@@ -71,7 +71,7 @@ public class CreateDoc {
      * notepad allows for utf-8 or utf-16 (unicode).  Its important to edit files with an editor that obeys the rules.
      * @throws IOException  If FreeMarker can't be configured.
      */
-    public CreateDoc(URL dataRoot, Locale locale, String charset) throws IOException {
+    public CreateDoc(URL dataRoot, Locale locale, String charset) {
         Preconditions.checkNotNull(dataRoot);
         Preconditions.checkNotNull(locale);
         Preconditions.checkNotNull(charset);
@@ -83,7 +83,7 @@ public class CreateDoc {
         this.templateLoader = null;
     }
 
-    public CreateDoc(TemplateLoader templateLoader, Locale locale, String charset) throws IOException {
+    public CreateDoc(TemplateLoader templateLoader, Locale locale, String charset) {
         Preconditions.checkNotNull(templateLoader);
         Preconditions.checkNotNull(locale);
         Preconditions.checkNotNull(charset);
@@ -142,7 +142,7 @@ public class CreateDoc {
      * @param map  The map passed in by FreeMarker when instantiating the template.
      * @return  The instantiated document.  Bytes are returned as this could be in any text encoding and will
      * often just be set as a web resource.  May be some mileage in returning a string, even though.
-     * @throws IOException If there are any problems locating or processint the template.
+     * @throws IOException If there are any problems locating or processing the template.
      */
     public byte[] createDocument(String templateName, Map<String, ?> map) throws IOException {
         Template template = getTemplateForLocale(templateName);

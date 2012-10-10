@@ -33,7 +33,7 @@ import java.util.Map;
 // Use 
 public class PersonaLogin {
 
-    private IPersonaUserDAO userDAO;
+    private final IPersonaUserDAO userDAO;
 
     @Inject
     public PersonaLogin(IPersonaUserDAO userDAO) {

@@ -33,12 +33,12 @@ import org.apache.shiro.subject.PrincipalCollection;
 import java.util.logging.Logger;
 
 
-public class AbstractPersonaRealm extends AuthorizingRealm {
+public abstract class AbstractPersonaRealm extends AuthorizingRealm {
     static final Logger LOG = Logger.getLogger(AbstractPersonaRealm.class.getName());
 
     private final IPersonaUserDAO personaUserDAO;
 
-    public AbstractPersonaRealm(IPersonaUserDAO personaUserDAO, CacheManager cacheManager) {
+    protected AbstractPersonaRealm(IPersonaUserDAO personaUserDAO, CacheManager cacheManager) {
         super(cacheManager, new PersonaCredentialsMatcher());
         this.personaUserDAO = personaUserDAO;
         setAuthenticationTokenClass(PersonaAuthenticationToken.class);

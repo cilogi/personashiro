@@ -55,8 +55,7 @@ public class UserDAOProvider {
 
     private static final ThreadLocal<UserDAO> tlDao = new ThreadLocal<UserDAO>() {
         protected UserDAO initialValue() {
-            UserDAO dao = new UserDAO();
-            return dao;
+            return new UserDAO();
         }
     };
 

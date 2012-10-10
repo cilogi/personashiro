@@ -49,10 +49,7 @@ public class PersonaUserDAO implements IPersonaUserDAO {
     @Override
     public boolean isUserOK(String principal) {
         GaeUser user = dao().findUser(principal);
-        if (user == null || user.isSuspended()) {
-            return false;
-        }
-        return true;
+        return !(user == null || user.isSuspended());
     }
 
     @Override

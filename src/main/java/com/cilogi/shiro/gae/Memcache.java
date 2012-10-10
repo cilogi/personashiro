@@ -54,7 +54,7 @@ public class Memcache<K, V> implements Cache<K, V> {
     public V putSync(K k, V v) throws CacheException {
         try {
             memcacheService.put(wrap(k), v, Expiration.byDeltaSeconds(EXPIRES)).get();
-            return null;
+            return v;
         }  catch (InterruptedException e) {
             return null;
         } catch (ExecutionException e) {

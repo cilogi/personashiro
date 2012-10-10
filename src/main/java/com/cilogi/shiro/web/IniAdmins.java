@@ -31,8 +31,7 @@ public class IniAdmins {
     private final IniRealm realm;
 
     public IniAdmins() {
-        IniRealm realm = new IniRealm("classpath:shiro.ini");
-        this.realm = realm;
+        this.realm = new IniRealm("classpath:shiro.ini");
     }
 
     public boolean isAdmin(String name) {

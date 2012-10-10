@@ -43,9 +43,9 @@ public class GaeUser implements Serializable {
     @Id
     private String name;
 
-    private Set<String> roles;
+    private final Set<String> roles;
 
-    private Set<String> permissions;
+    private final Set<String> permissions;
 
     @Indexed
     private Date dateRegistered;
@@ -62,11 +62,8 @@ public class GaeUser implements Serializable {
         this(name, new HashSet<String>(), new HashSet<String>());
     }
     
-    public GaeUser(String name, Set<String> roles, Set<String> permissions) {
-        this(name, roles, permissions, false);
-    }
 
-    GaeUser(String name, Set<String> roles, Set<String> permissions, boolean isRegistered) {
+    public GaeUser(String name, Set<String> roles, Set<String> permissions) {
         Preconditions.checkNotNull(name, "User name (email) can't be null");
         Preconditions.checkNotNull(roles, "User roles can't be null");
         Preconditions.checkNotNull(permissions, "User permissions can't be null");
@@ -74,7 +71,7 @@ public class GaeUser implements Serializable {
 
         this.roles = Collections.unmodifiableSet(roles);
         this.permissions = Collections.unmodifiableSet(permissions);
-        this.dateRegistered = isRegistered ? new Date() : null;
+        this.dateRegistered = null;
         this.isSuspended = false;
     }
 

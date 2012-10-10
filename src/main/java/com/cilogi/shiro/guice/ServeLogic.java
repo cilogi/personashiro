@@ -40,7 +40,6 @@ import freemarker.template.Configuration;
 import freemarker.template.TemplateModelException;
 import org.apache.shiro.web.servlet.ShiroFilter;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.Locale;
 import java.util.logging.Logger;
@@ -86,15 +85,13 @@ public class ServeLogic extends AbstractModule {
             cfg.setSharedVariable("userBaseUrl", userBaseUrl);
             cfg.setSharedVariable("staticBaseUrl", staticBaseUrl);
             return create;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         } catch (TemplateModelException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Provides
-    UserDAO provideUserDAO() {
+    public UserDAO provideUserDAO() {
         return UserDAOProvider.get();
     }
 

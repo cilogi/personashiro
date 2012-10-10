@@ -31,7 +31,7 @@ import java.util.logging.Logger;
 public class ShiroMethodInterceptor implements MethodInterceptor {
     static final Logger LOG = Logger.getLogger(ShiroMethodInterceptor.class.getName());
 
-    private org.apache.shiro.aop.MethodInterceptor methodInterceptor;
+    private final org.apache.shiro.aop.MethodInterceptor methodInterceptor;
 
     public ShiroMethodInterceptor(org.apache.shiro.aop.MethodInterceptor methodInterceptor) {
         this.methodInterceptor = methodInterceptor;
