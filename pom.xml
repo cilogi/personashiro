@@ -426,5 +426,12 @@
             </properties>
         </profile>
     </profiles>
-
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jdepend-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </reporting>
 </project>

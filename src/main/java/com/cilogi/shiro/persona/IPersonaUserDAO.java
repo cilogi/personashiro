@@ -1,6 +1,6 @@
 // Copyright (c) 2012 Tim Niblett. All Rights Reserved.
 //
-// File:        IniAdmins.java  (10-Oct-2012)
+// File:        IPersonaUserDAO.java  (10-Oct-2012)
 // Author:      tim
 //
 // Copyright in the whole and every part of this source file belongs to
@@ -18,24 +18,13 @@
 //
 
 
-package com.cilogi.shiro.guice;
+package com.cilogi.shiro.persona;
 
-import org.apache.shiro.realm.text.IniRealm;
+import java.util.Set;
 
-import java.util.logging.Logger;
-
-// find all the users which are admins from the ini realm
-public class IniAdmins {
-    static final Logger LOG = Logger.getLogger(IniAdmins.class.getName());
-
-    private final IniRealm realm;
-
-    public IniAdmins() {
-        IniRealm realm = new IniRealm("classpath:shiro.ini");
-        this.realm = realm;
-    }
-
-    public boolean isAdmin(String name) {
-        return realm.accountExists(name);
-    }
+public interface IPersonaUserDAO {
+    public void newUserIfNotExists(String name);
+    public boolean isUserOK(String name);
+    public Set<String> userRoles(String name);
+    public Set<String> userPermissions(String name);
 }

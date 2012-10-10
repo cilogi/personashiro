@@ -1,6 +1,6 @@
 // Copyright (c) 2012 Tim Niblett. All Rights Reserved.
 //
-// File:        OAuthRealm.java  (07-Oct-2012)
+// File:        AbstractPersonaRealm.java  (10-Oct-2012)
 // Author:      tim
 //
 // Copyright in the whole and every part of this source file belongs to
@@ -20,27 +20,27 @@
 
 package com.cilogi.shiro.persona;
 
-import com.cilogi.shiro.gae.GaeUser;
-import com.cilogi.shiro.gae.MemcacheManager;
-import com.cilogi.shiro.gae.UserDAO;
-import com.cilogi.shiro.gae.UserDAOProvider;
 import com.google.common.base.Preconditions;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 
 import java.util.logging.Logger;
 
 
-public class PersonaRealm extends AuthorizingRealm {
-    static final Logger LOG = Logger.getLogger(PersonaRealm.class.getName());
+public class AbstractPersonaRealm extends AuthorizingRealm {
+    static final Logger LOG = Logger.getLogger(AbstractPersonaRealm.class.getName());
 
-    public PersonaRealm() {
-        super(new MemcacheManager(), new PersonaCredentialsMatcher());
+    private final IPersonaUserDAO personaUserDAO;
+
+    public AbstractPersonaRealm(IPersonaUserDAO personaUserDAO, CacheManager cacheManager) {
+        super(cacheManager, new PersonaCredentialsMatcher());
+        this.personaUserDAO = personaUserDAO;
         setAuthenticationTokenClass(PersonaAuthenticationToken.class);
     }
 
@@ -57,22 +57,18 @@ public class PersonaRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         Preconditions.checkNotNull(principals, "You can't have a null collection of principals");
-        String userName = (String) getAvailablePrincipal(principals);
-        if (userName == null) {
+        String principal = (String) getAvailablePrincipal(principals);
+        if (principal == null) {
             throw new NullPointerException("Can't find a principal in the collection");
         }
-        LOG.fine("Finding authorization info for " + userName + " in DB");
-        GaeUser user = dao().findUser(userName);
-        if (user == null || user.isSuspended()) {
+        LOG.fine("Finding authorization info for " + principal + " in DB");
+        if (personaUserDAO.isUserOK(principal)) {
+            SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(personaUserDAO.userRoles(principal));
+            info.setStringPermissions(personaUserDAO.userPermissions(principal));
+            return info;
+        } else {
             return null;
         }
-        LOG.fine("Found " + userName + " in DB");
-        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(user.getRoles());
-        info.setStringPermissions(user.getPermissions());
-        return info;
     }
 
-    private static UserDAO dao() {
-        return UserDAOProvider.get();
-    }
 }

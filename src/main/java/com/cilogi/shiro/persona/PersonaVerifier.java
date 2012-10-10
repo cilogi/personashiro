@@ -25,7 +25,8 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.Maps;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
+import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Map;
@@ -46,13 +47,10 @@ class PersonaVerifier {
 
     Map<String,String> verify(String personaToken, String host) {
         Map<String,String> map = Maps.newHashMap();                               
-        URLFetchService service = URLFetchServiceFactory.getURLFetchService();
         try {
             URL url = new URL(String.format(VERIFY_URL + "?assertion=%s&audience=%s",
                                             encode(personaToken), encode(host)));
-            HTTPRequest request = new HTTPRequest(url, HTTPMethod.POST);
-            HTTPResponse response = service.fetch(request);
-            String s = new String(response.getContent(), Charsets.UTF_8);
+            String s = postURL(url);
             JSONObject obj = new JSONObject(s);
             map.put(STATUS_FIELD, obj.optString(STATUS_FIELD, TOKEN_FAILURE));
             if (map.get(STATUS_FIELD).equals(TOKEN_OK)) {
@@ -72,5 +70,48 @@ class PersonaVerifier {
             LOG.warning("Error encoding: " + s + ": " + e.getMessage());
             return s;
         }
+    }
+
+    /*
+    static String postURLGae(URL url) throws IOException {
+        URLFetchService service = URLFetchServiceFactory.getURLFetchService();
+        HTTPRequest request = new HTTPRequest(url, HTTPMethod.POST);
+        HTTPResponse response = service.fetch(request);
+        String s = new String(response.getContent(), Charsets.UTF_8);
+    }
+    */
+
+    static String postURL(URL url) throws IOException {
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setDoOutput(true);
+        connection.setDoInput(true);
+        connection.setRequestMethod("POST");
+
+        OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+        writer.close();
+
+        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            InputStream is = connection.getInputStream();
+            byte[] data = copyStream(is);
+            is.close();
+            return new String(data, Charsets.UTF_8);
+        } else {
+            return null;
+        }
+
+    }
+
+    static byte[] copyStream(InputStream in) throws IOException {
+        final int BUFSZ = 4096;
+        ByteArrayOutputStream out = new ByteArrayOutputStream(BUFSZ * 20);
+        byte[] buf = new byte[BUFSZ];
+        int nRead;
+        while ((nRead = in.read(buf)) != -1) {
+            out.write(buf, 0, nRead);
+        }
+        out.flush();
+        byte[] ret = out.toByteArray();
+        out.close();
+        return ret;
     }
 }

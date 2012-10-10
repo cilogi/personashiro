@@ -36,18 +36,18 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 
 @Singleton
 public class LoginServlet extends BaseServlet {
-    static final Logger LOG = Logger.getLogger(LoginServlet.class.getName());
 
     private final String host;
+    private final PersonaLogin personaLogin;
 
     @Inject
-    LoginServlet(Provider<UserDAO> userDAOProvider, @Named("host") String host) {
+    LoginServlet(Provider<UserDAO> userDAOProvider, PersonaLogin personaLogin, @Named("host") String host) {
         super(userDAOProvider);
+        this.personaLogin = personaLogin;
         this.host = host;
     }
 
@@ -59,12 +59,12 @@ public class LoginServlet extends BaseServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            String token = WebUtils.getCleanParam(request, TOKEN); // the persona token
+            String token = WebUtils.getCleanParam(request, TOKEN);
             boolean rememberMe = WebUtils.isTrue(request, REMEMBER_ME);
 
             PersonaAuthenticationToken personaToken = new PersonaAuthenticationToken(token, host, rememberMe);
             try {
-                PersonaLogin.login(personaToken, getDAO());
+                personaLogin.login(personaToken);
                 SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(request);
                 String redirectUrl = (savedRequest == null) ? "/index.html" : savedRequest.getRequestUrl();
                 response.sendRedirect(response.encodeRedirectURL(redirectUrl));

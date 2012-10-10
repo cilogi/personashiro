@@ -20,32 +20,32 @@
 
 package com.cilogi.shiro.persona;
 
-import com.cilogi.shiro.gae.GaeUser;
-import com.cilogi.shiro.gae.UserDAO;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 
+import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Map;
-import java.util.logging.Logger;
 
 // Use 
 public class PersonaLogin {
-    static final Logger LOG = Logger.getLogger(PersonaLogin.class.getName());
 
+    private IPersonaUserDAO userDAO;
 
-    private PersonaLogin() {}
-
-    public static void login(PersonaAuthenticationToken personaToken, UserDAO dao) {
-        personaToken.verify();
-        loginWithNewSession(personaToken, dao);
+    @Inject
+    public PersonaLogin(IPersonaUserDAO userDAO) {
+        this.userDAO = userDAO;
     }
 
-    private static void loginWithNewSession(PersonaAuthenticationToken token, UserDAO dao) {
+    public void login(PersonaAuthenticationToken personaToken) {
+        personaToken.verify();
+        loginWithNewSession(personaToken);
+    }
+
+    private void loginWithNewSession(PersonaAuthenticationToken token) {
         Preconditions.checkArgument(token.isValid(), "Token must be valid to allow login");
 
         Subject subject = SecurityUtils.getSubject();
@@ -53,7 +53,7 @@ public class PersonaLogin {
 
         Map<Object, Object> attributes = sessionAttributes(originalSession);
         originalSession.stop();
-        createNewUserIfNecessary(token, dao);
+        createNewUserIfNecessary(token);
 
         subject.login(token);
 
@@ -64,20 +64,15 @@ public class PersonaLogin {
     }
 
     // make sure that we have a user in the database with the email from this token.
-    private static void createNewUserIfNecessary(PersonaAuthenticationToken token, UserDAO dao) {
+    private void createNewUserIfNecessary(PersonaAuthenticationToken token) {
         Preconditions.checkNotNull(token, "Token can't be null when finding associated user");
         Preconditions.checkArgument(token.isValid(), "Token must be valid to allow user creation");
 
         String principal = (String)token.getPrincipal();
-        GaeUser user = (principal == null) ? null : dao.findUser(principal);
-        if (user == null) {
-            user = new GaeUser(principal, Sets.newHashSet("user"), Sets.<String>newHashSet());
-            user.register();
-            dao.saveUser(user, true);
-        }
+        userDAO.newUserIfNotExists(principal);
     }
 
-    private static Map<Object,Object> sessionAttributes(Session session) {
+    private Map<Object,Object> sessionAttributes(Session session) {
         Map<Object, Object> attributes = Maps.newLinkedHashMap();
         Collection<Object> keys = session.getAttributeKeys();
         for(Object key : keys) {
