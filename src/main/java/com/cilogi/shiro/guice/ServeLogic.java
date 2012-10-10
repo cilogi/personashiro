@@ -25,6 +25,7 @@ import com.cilogi.shiro.gae.IniAdmins;
 import com.cilogi.shiro.gae.UserDAO;
 import com.cilogi.shiro.gae.UserDAOProvider;
 import com.cilogi.util.doc.CreateDoc;
+import com.google.appengine.api.utils.SystemProperty;
 import com.google.appengine.tools.appstats.AppstatsFilter;
 import com.google.appengine.tools.appstats.AppstatsServlet;
 import com.google.cloud.sql.jdbc.internal.Charsets;
@@ -66,6 +67,8 @@ public class ServeLogic extends AbstractModule {
         bindString("email.from", "admin@personashiro.appspotmail.com");
         bindString("userBaseUrl", userBaseUrl);
         bindString("staticBaseUrl", staticBaseUrl);
+        // we make this explicit as a security measure.
+        bindString("host", isDevelopmentServer() ? "http://localhost:8080" : "http://personashiro.appspot.com:80");
     }
 
     private void bindString(String key, String value) {
@@ -90,6 +93,11 @@ public class ServeLogic extends AbstractModule {
     @Provides
     UserDAO provideUserDAO() {
         return UserDAOProvider.get();
+    }
+
+    private static boolean isDevelopmentServer() {
+        SystemProperty.Environment.Value server = SystemProperty.environment.value();
+        return server == SystemProperty.Environment.Value.Development;
     }
 
 }

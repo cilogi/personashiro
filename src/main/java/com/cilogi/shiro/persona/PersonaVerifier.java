@@ -44,12 +44,12 @@ class PersonaVerifier {
 
     PersonaVerifier() {}
 
-    Map<String,String> verify(String personaToken) {
+    Map<String,String> verify(String personaToken, String host) {
         Map<String,String> map = Maps.newHashMap();                               
         URLFetchService service = URLFetchServiceFactory.getURLFetchService();
         try {
             URL url = new URL(String.format(VERIFY_URL + "?assertion=%s&audience=%s",
-                                            encode(personaToken), encode("http://localhost:8080")));
+                                            encode(personaToken), encode(host)));
             HTTPRequest request = new HTTPRequest(url, HTTPMethod.POST);
             HTTPResponse response = service.fetch(request);
             String s = new String(response.getContent(), Charsets.UTF_8);

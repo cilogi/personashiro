@@ -139,35 +139,25 @@ body {
 
             <p>and doesn't come with a general authentication and authorization service.</p>
 
-            <p>Persona is an interesting take on identity management, and</p>
+            <p>Persona is an interesting take on identity management.</p>
 
             <p>Shiro is good for authorization and
-                we've done the needed porting, and</p>
+                we've done the needed porting, and
+                provided some simple user management.</p>
 
-            <p>provided some simple user management.</p>
-
-            <p>Guice is used to glue things together</p>
-
-            <p>even though it slows down startup on App Engine somewhat.</p>
-
+            <p>Guice is used to glue things together.</p>
         </div>
         <div class="span9">
-            <p>App Engine is a remarkable achievement. You can create a small free website and
-                scale it indefinitely with almost no ongoing administration required. A wide range
-                of useful services are available out of the box, with almost no set-up or maintenance
-                needed.</p>
-
-            <p>With scalability comes a set of restrictions and limitations. Interfaces are
-                non-standard: so persistent storage and retrieval are
-                'different'. Application instances are started on demand, so startup must be rapid. Startup is a
-                particular challenge for Java which is known to initialize with the alacrity of a drowsy snail.
-                App Engine charges for resources so you need to be careful to minimise use.</p>
+            <p>App Engine is a great. You can create a small free website and
+                scale it indefinitely with almost no ongoing administration. A wide range
+                of useful services are available out of the box.</p>
 
             <p>There is a Google accounts service, but this can't be used for an application used by a wider
                public, who don't have or don't want use a Google login. Even with a user service many sites
-               also need a permissions system to decide who gets to access what.</p>
+               also need a permissions system to decide who gets to access what. App Engine has one but
+               its limited.</p>
 
-            <p>Persona is an interesting new approach to identity management.  It provides a secure way
+            <p>Persona is an new approach to identity management from Mozilla.  It provides a secure way
                for users to authenticate with web sites using their Email addresses.  This (for me) is more
                convenient than OpenID, as one usually wants the Email address anyway.  Unlike other systems
                the email is the <em>only</em> information that gets given to the website.</p>
@@ -180,26 +170,11 @@ body {
                 new instances in response to demand. So, Shiro is a good fit with App Engine and its worth
                 making the adaptation to the Datastore and Memcached services.</p>
 
-            <p>If you're not using the built-in authentication system for Google email addresses on App Engine then you'll
-                likely want a basic system for user password management.  This sample provides a basic identity management system
-                which can easily be extended, or used as-is</p>
-
-            <p>The fastest way to run App Engine is with basic servlets run from <code>web.xml</code>.
-                This can be quite painful, so we're using Google Guice. Guice is a lightweight dependency
-                injection framework with an extension for web applications and it makes wiring an application
-                together much simpler.</p>
-
-            <p>Although Guice is considered to be lightweight (compared to Spring) it does slow down the
-                startup of the application. This is because Guice does its wiring at startup, so pretty-much
-                all your code will be loaded at once. With plain servlets you may be able to load classes incrementally.
-                It is possible to use Guice without its AOP features, which slow down startup, but we've chosen
-                to go with the whole package to show the use of Shiro annotations which require AOP.</p>
-
-            <p>This demonstration uses a simple trick to make the startup seem faster by using a static HTML page
-                as the home page and performing an Ajax call from Javascript to do the initialization. Some crufty
-                animation on load takes your attention away from the 5 second start-up delay!  The startup page is
-                generated from FreeMarker templates, just as the other pages, but at compile time, rather than runtime</p>
-        </div>
+            <p>This sample provides an identity management system
+                which can easily be extended, or used as-is.  The ease of use is the same as the built-in
+                service, but you can use it with any Email address and the security framework is more
+                flexible if you ever need it.</p>
+       </div>
     </div>
 </section>
 
@@ -213,13 +188,16 @@ body {
         <div class="span4">
             <h2>In Brief</h2>
 
-            <p>We have made a minor change to <code>UsernamePasswordToken</code> authentication</p>
-
-            <p>We've hacked in authentication for sensitive areas, keeping the registered/authenticated distinction.</p>
+            <p>We have made a minor change to introduce <code>PersonaAuthenticationToken</code>s and the
+               necessary Shiro accessories to go with it.</p>
         </div>
         <div class="span9">
             <p>Persona does most of its work in JavaScript, inside an <code>iframe</code>.  An identity <em>assertion</em> is generated
-               client-side which contains all the information required to authenticate.  We cheat a little and use the
+               client-side which contains all the information required to authenticate.  Once done an opaque token is passed
+               from the browser to the server.  The server then verifies this token (with Mozilla at the moment) and
+               receives back inforation including the verified Email associated with the token.
+
+                We cheat a little and use the
                <code>UsernamePasswordToken</code> to encode this, with the initial username being just a dummy, and the
                assertion being in the password.  The token is used in our <code>DatastoreRealm</code> class to communicate
                with the Persona server to (a) authenticate the user, and (b) to recover the user's Email address.

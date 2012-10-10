@@ -72,7 +72,7 @@ public class PersonaAuthenticationToken implements HostAuthenticationToken, Reme
 
     public void verify() throws AuthenticationException {
         PersonaVerifier verifier = new PersonaVerifier();
-        Map<String,String> map = verifier.verify(token);
+        Map<String,String> map = verifier.verify(token, host);
         principal = map.get(PersonaVerifier.EMAIL_FIELD);
         if (principal == null) {
             throw new AuthenticationException("Can't verify token: " + token);

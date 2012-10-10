@@ -27,6 +27,7 @@ import com.cilogi.shiro.persona.PersonaAuthenticationToken;
 import com.google.appengine.repackaged.com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.sun.deploy.net.HttpRequest;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.session.Session;
@@ -35,6 +36,7 @@ import org.apache.shiro.web.util.SavedRequest;
 import org.apache.shiro.web.util.WebUtils;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.servlet.ServletException;
@@ -50,10 +52,12 @@ import java.util.logging.Logger;
 public class LoginServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(LoginServlet.class.getName());
 
+    private final String host;
 
     @Inject
-    LoginServlet(Provider<UserDAO> userDAOProvider) {
+    LoginServlet(Provider<UserDAO> userDAOProvider, @Named("host") String host) {
         super(userDAOProvider);
+        this.host = host;
     }
 
     @Override
@@ -66,7 +70,6 @@ public class LoginServlet extends BaseServlet {
         try {
             String token = WebUtils.getCleanParam(request, TOKEN); // the persona token
             boolean rememberMe = WebUtils.isTrue(request, REMEMBER_ME);
-            String host = request.getRemoteHost();
 
             PersonaAuthenticationToken personaToken = new PersonaAuthenticationToken(token, host, rememberMe);
             try {
@@ -83,6 +86,7 @@ public class LoginServlet extends BaseServlet {
             issue(MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR, "Internal error: " + e.getMessage(), response);
         }
     }
+
 
     /**
      * Login and make sure you then have a new session.  This helps prevent session fixation attacks.
