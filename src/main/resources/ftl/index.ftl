@@ -14,7 +14,7 @@
 <div class="topbar" data-scrollspy="scrollspy">
     <div class="topbar-inner">
         <div class="container">
-            <a class="brand" href="#">GAEPersona</a>
+            <a class="brand" href="#">PersonaShiro</a>
             <ul class="nav">
                 <li class="active"><a href="#">Home</a></li>
                 <li><a href="#motivation">Motivation</a></li>
@@ -51,17 +51,16 @@
 <div class="quickstart">
     <div class="row">
         <div class="span6">
-            <h6>App Engine and Shiro</h6>
+            <h6>Identity Management</h6>
 
-            <p>We provide a Shiro Realm which works with the App Engine datastore via
-                <a href="http://code.google.com/p/objectify-appengine">Objectify</a>.
-                Caching comes via App Engine's memcached service.</p>
+            <p>We provide identity management using <a href="http://www.mozilla.org/persona">Persona</a> which is as
+               simple to use as the built-in User Service.</p>
         </div>
         <div class="span5">
             <h6>Persona and Shiro</h6>
 
-            <p>Persona takes care of all the authentication, providing a verified Email.  Shiro
-               can then take care of the authorization aspects of the application.</p>
+            <p>Persona takes care of authentication, providing a verified Email.  Shiro
+               takes care of authorization.</p>
         </div>
         <div class="span5">
             <h6>Fork on Github</h6>
@@ -106,7 +105,8 @@
                also need a permissions system to decide who gets to access what. App Engine has one but
                its limited.</p>
 
-            <p>Persona is an new approach to identity management from Mozilla.  It provides a secure way
+            <p><a href="http://www.mozilla.org/persona">Persona</a> is an new approach to identity
+               management from Mozilla.  It provides a secure way
                for users to authenticate with web sites using their Email addresses.  This (for me) is more
                convenient than OpenID, as one usually wants the Email address anyway.  Unlike other systems
                the email is the <em>only</em> information that gets given to the website.</p>
