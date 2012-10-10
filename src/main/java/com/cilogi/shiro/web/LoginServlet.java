@@ -24,6 +24,7 @@ package com.cilogi.shiro.web;
 import com.cilogi.shiro.gae.GaeUser;
 import com.cilogi.shiro.gae.UserDAO;
 import com.cilogi.shiro.persona.PersonaAuthenticationToken;
+import com.cilogi.shiro.persona.PersonaLogin;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -72,9 +73,7 @@ public class LoginServlet extends BaseServlet {
 
             PersonaAuthenticationToken personaToken = new PersonaAuthenticationToken(token, host, rememberMe);
             try {
-                personaToken.verify();
-                Subject subject = SecurityUtils.getSubject();
-                loginWithNewSession(personaToken, subject);
+                PersonaLogin.login(personaToken, getDAO());
                 SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(request);
                 String redirectUrl = (savedRequest == null) ? "/index.html" : savedRequest.getRequestUrl();
                 response.sendRedirect(response.encodeRedirectURL(redirectUrl));
@@ -83,47 +82,6 @@ public class LoginServlet extends BaseServlet {
             }
         } catch (Exception e) {
             issue(MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR, "Internal error: " + e.getMessage(), response);
-        }
-    }
-
-
-    /**
-     * Login and make sure you then have a new session.  This helps prevent session fixation attacks.
-     * 
-     * @param token
-     * @param subject
-     */
-    private void loginWithNewSession(PersonaAuthenticationToken token, Subject subject) {
-        Preconditions.checkArgument(token.isValid(), "Token must be valid to allow login");
-        Session originalSession = subject.getSession();
-
-        Map<Object, Object> attributes = Maps.newLinkedHashMap();
-        Collection<Object> keys = originalSession.getAttributeKeys();
-        for(Object key : keys) {
-            Object value = originalSession.getAttribute(key);
-            if (value != null) {
-                attributes.put(key, value);
-            }
-        }
-        originalSession.stop();
-        createNewUserIfNecessary(token);
-        subject.login(token);
-
-        Session newSession = subject.getSession();
-        for(Object key : attributes.keySet() ) {
-            newSession.setAttribute(key, attributes.get(key));
-        }
-    }
-
-    private void createNewUserIfNecessary(PersonaAuthenticationToken token) {
-        Preconditions.checkNotNull(token, "Token can't be null when finding associated user");
-        UserDAO dao = getDAO();
-        String principal = (String)token.getPrincipal();
-        GaeUser user = (principal == null) ? null : dao.findUser(principal);
-        if (user == null) {
-            user = new GaeUser(principal, Sets.newHashSet("user"), Sets.<String>newHashSet());
-            user.register();
-            dao.saveUser(user, true);
         }
     }
 }

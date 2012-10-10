@@ -17,7 +17,6 @@
             <a class="brand" href="#">GAEPersona</a>
             <ul class="nav">
                 <li class="active"><a href="#">Home</a></li>
-                <li><a href="#what">What</a></li>
                 <li><a href="#motivation">Motivation</a></li>
                 <li><a href="#persona">Persona</a></li>
                 <li><a href="#shiro">Shiro</a></li>
@@ -96,8 +95,6 @@
             <p>Shiro is good for authorization and
                 we've done the needed porting, and
                 provided some simple user management.</p>
-
-            <p>Guice is used to glue things together.</p>
         </div>
         <div class="span9">
             <p>App Engine is a great. You can create a small free website and
@@ -140,27 +137,16 @@
         <div class="span4">
             <h2>In Brief</h2>
 
-            <p>We have made a minor change to introduce <code>PersonaAuthenticationToken</code>s and the
-               necessary Shiro accessories to go with it.</p>
+            <p><a href="http://www.mozilla.org/persona">Persona</a> is a new initiative by Mozilla to provide simple identity
+                management based on Email addresses.</p>
         </div>
         <div class="span9">
-            <p>Persona does most of its work in JavaScript, inside an <code>iframe</code>.  An identity <em>assertion</em> is generated
-               client-side which contains all the information required to authenticate.  Once done an opaque token is passed
-               from the browser to the server.  The server then verifies this token (with Mozilla at the moment) and
-               receives back inforation including the verified Email associated with the token.
-
-                We cheat a little and use the
-               <code>UsernamePasswordToken</code> to encode this, with the initial username being just a dummy, and the
-               assertion being in the password.  The token is used in our <code>DatastoreRealm</code> class to communicate
-               with the Persona server to (a) authenticate the user, and (b) to recover the user's Email address.
-            </p>
-            <p>Shiro makes the useful distinction between a <em>remembered</em> users who were previously logged in
-               and for whom there is a cookie in their browser, and <em>authenticated</em> users, who have been authenticated in
-               the current session.  We have fiddled a little to keep this property.  If you try to access a protected page then
-               you get a new Persona popup asking you to choose your identity.  I'm not quite sure how useful this is, as
-               persona will authenticate (I believe) over more than just 1 session.  So, if you're concerned about this it may
-               be better either <em>not</em> to allow users to be remembered, or not to use Persona.
-            </p>
+            <p>Persona does most of its work in JavaScript, on the client, communicating with the identity server using an
+                <code>iframe</code>.  An identity <em>assertion</em> is generated
+               client-side which contains all the information required to authenticate.  The assertion is passed
+               from the browser to the server.  The server  verifies this assertion (with Mozilla at the moment) and
+               receives back information including the verified Email associated with the token.</p>
+            <p> We have provided a lightweight interface to Shiro for the token and its verification.</p>
         </div>
     </div>
 </section>
@@ -182,143 +168,13 @@
             <p>In memory caches are combined with memcached to keep things fast and cheap.</p>
         </div>
         <div class="span9">
-            <p>The Shiro components which need to be adapted to App Engine are
-                <a href="http://shiro.apache.org/realm.html">realms</a>,
-                the <a href="http://shiro.apache.org/caching.html">cache</a> and
-                the AOP-based annotations. If the annotations aren't required then
-                they can be eliminated and startup time will be reduced.
-
-            <p>
-
-            <p>To create a new realm only two methods need to be implemented, namely:</p>
-<pre class="prettyprint" lang-java>
-    AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token)
-    AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals)
-</pre>
-            <p>The only sort of token handle is the <code>UsernamePasswordToken</code>, so
-               the principal and credentials are simple strings, in our case a user's email
-               address and password. We use an email address as the user's identifier since we
-               need it anyway to change passwords securely.</p>
-            <p>It is possible to set up users in the <code>IniRealm</code> and it makes sense
-               to use this with our new realm -- the <code>IniRealm</code> is a good place to stash
-               the administrator login for example. Our <code>DatastoreRealm</code> needs to be able to
-               store an unlimited number of users persistently, so we need the datastore for
-               this. Rather than using the raw datastore service we use <a href="">Objectify</a> which
-               is a well designed and  lightweight layer on top of the datastore, which just
-               removes the rough edges without hiding the datastore structure.</p>
-            <p>Implementation of the <code>DatastoreRealm</code> is via a user object, <code>GaeUser</code>,
-                which is keyed on the email address and has a single indexed field - the registration date.
-                Using the email as the key means that lookup will be fast and cheap.</p>
-            <p>We have also implemented a Shiro-compatible cache, based on memcached.
-                The cache expiry has been set to 5 minutes which should limit any consistency problems.</p>
-            <p>Since the <code>DatastoreRealm</code> is a singleton in each JVM, and since although memcached
-                saves on datastore resources it is slow, we also include an in-memory cache in the realm, which
-                is of limited size and evicts after 5 minutes, but is fast. A combination of in-memory
-                and memcached caches is the best way to limit hits to the data store and to minimize the
-                overall cost and the number of instances we need,</p>
-             <p>The final database object is a counter to keep track of the number of users we have.  Its
-               too inefficient to count users when the number is large so a counter is needed.  We don't expect
-               the counter to be changed very often (not more than once a second) so there's no need for fancy
-               tricks like sharding.</p>
-        </div>
-    </div>
-</section>
-<section id="guice">
-    <div class="page-header">
-        <h1>Guice
-            <small>setup and interface</small>
-        </h1>
-    </div>
-    <div class="row">
-        <div class="span4">
-            <h2>The pith</h2>
-
-            <p>Guice helps simplify the code somewhat.</p>
-
-            <p>We have adapted realms and caches.</p>
-
-            <p>Objectify is used to interface to the datastore</p>
-
-            <p>In memory caches are combined with memcached to keep things fast and cheap.</p>
-        </div>
-        <div class="span9">
-            <p>Guice is a lightweight alternative to Spring.  Its useful, in that it makes the code
-               somewhat easier to organize.  It will slow down startup somewhat, although less than Spring would.</p>
-            <p>There are a couple of ways to go when interfacing a system such as Shiro with Guice. We can
-                do the minimum necessary to interface Guice and Shiro or we can try a deeper integration where
-                Shiro can be fully configured inside Guice.</p>
-            <p>Shiro 1.2 includes a Guice module which goes down the second of these routes. I may be
-                missing something but I don't see much advantage to this, and the minimal approach where we
-                do as much configuration as possible from the <code>shiro.ini</code> resource file does
-                everything we need, which is three main functions.</p>
-                <ol>
-                    <li>Be unobtrusive so that I don't have to think about security when I'm coding the logic of
-                        my application.
-                    </li>
-                    <li>Let me specify, in as declarative a manner as possible, the security for the application</li>
-                    <li>Provide a simple mechanism whereby I can tailor web pages depending on who is logged in</li>
-                </ol>
-            <p>All of these concerns are met by the <em>standard</em> Shiro. The <code>shiro.ini</code> file
-                is great -- its simple and powerful.</p>
-            <p>My mind is open to persuasion on this point. I just haven't seen any reason for moving from the
-                minimalist position. Here is the <code>shiro.ini</code> I'm using.</p>
-<pre class="prettyprint">
-[main]
-personaRealm = com.cilogi.shiro.persona.PersonaRealm
-securityManager.realms = $iniRealm, $personaRealm
-
-[users]
-tim.niblett@cilogi.com = password, user, admin
-tim@timniblett.net = password, user
-
-[roles]
-admin = *
-user = browse:*
-
-[urls]
-/login.jsp = authc
-/listUsers.ftl = authc
-/appstats/** = authc, roles[admin]
-/logout = logout
-...
-</pre>
-            <p>There are two ways in which we can tailor web pages. The first is to use templates and tags. The
-                built in JSP tags can be used from both JSP and FreeMarker (if not others). In Freemarker you
-                need the following invocation at the top of your web page:</p>
-<pre class="prettyprint">
-&lt;#assign shiro=JspTaglibs["META-INF/shiro.tld"]&gt;
-</pre>
-            with the location of the tag specification being the expression in brackets. You can then use
-            tags to include text, depending on the user's status, role or permissions. The second approach,
-            used on this page is to query the server, via Ajax, for your status, set class attributes depending
-            on the result and use CSS rules to decide what to show.</p>
-            <p>In order to configure Shiro with Guice the following was necessary.</p>
-            <ul>
-                <li>The Shiro listener should be added to <code>web.xml</code>
-<pre class="prettyprint" lang-xml linenums>
-    &lt;listener&gt;
-        &lt;listener-class>
-          org.apache.shiro.web.env.EnvironmentLoaderListener
-        &lt;/listener-class&gt;
-    &lt;/listener&gt;
-</pre>
-                </li>
-                <li>Inside the <code>configureServlets</code> method of your <code>ServletModule</code> you must
-                    serve the paths you want secured with the <code>ShiroFilter</code>.
-<pre class="prettyprint">
-    filter("/*").through(ShiroFilter.class);
-</pre>
-                </li>
-                <li>In your <code>configure</code> method you need to make sure that <code>ShiroFilter</code>
-                    is a singleton.
-<pre class="prettyprint">
-    bind(ShiroFilter.class).in(Scopes.SINGLETON);
-</pre>
-                </li>
-            </ul>
-            <p>That's all it takes to configure Shiro with Guice. If you want to use the AOP annotations then
-                you will need to include the Guice module <code>com.cilogi.shiro.aop.AopModule</code> which
-                provides bindings for all of Shiro's AOP annotations.</p>
+            <p>Adaptation of the Shiro realm, token, and authentication classes to Persona
+               are straightforward.  Control flow is simple, a token is received and if verified,
+               the user is extracted and we can login.</p>
+            <p>For the demo we have also introduced a user class, <code>GaeUser</code> which can
+               be stored in the App Engine datastore.  We've also provided a simple way to list users.</p>
+            <p>In keeping with the simple setup of App Engine's user service the demo allows any user
+               in the <code>shiro.ini</code> setup file to be an admin.</p>
         </div>
     </div>
 </section>
@@ -351,7 +207,8 @@ user = browse:*
                JavaScript to minimise round trips to the server to determine login status.  This doesn't compromise the
                server-side security but speeds things up and helps bring down App Engine's costs.</p>
             <h3>Reuse</h3>
-            <p>The <code>com.cilogi.shiro.gae</code> and <code>com.cilogi.shiro.aop</code> packages should
+            <p>The <code>com.cilogi.shiro.gae</code>, <code>com.cilogi.shiro.persona</code>
+               and <code>com.cilogi.shiro.aop</code> packages should
                be easily re-usable.  There are dependencies on Shiro, Objectify and Guava.  The Guava
                dependency could be removed with a little effort, Objectify somewhat more.</p>
             <p>The servlets in <code>com.cilogi.shiro.web</code> have parameters hard-wired and no
@@ -362,12 +219,8 @@ user = browse:*
         </div>
     </div>
 </section>
-
-<footer>
-    <p>&copy; <a href="http://www.cilogi.com">Cilogi</a> Limited 2011</p>
-</footer>
-
 </div>
+<#include "inc/copyright.ftl">
 </body>
 <#include "inc/_foot.ftl">
 <script>

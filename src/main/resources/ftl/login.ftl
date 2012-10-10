@@ -78,7 +78,7 @@
     </footer>
 
 </div>
-
+<#include "inc/copyright.ftl">
 <#include "inc/_foot.ftl">
 
 <script>
