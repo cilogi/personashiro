@@ -21,13 +21,18 @@
 
 package com.cilogi.shiro.web;
 
+import com.cilogi.shiro.gae.IniAdmins;
+import com.cilogi.shiro.gae.UserDAO;
 import com.cilogi.util.MimeTypes;
 import com.cilogi.util.doc.CreateDoc;
 import com.google.common.base.Preconditions;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,7 +43,7 @@ import java.util.logging.Logger;
 class BaseServlet extends HttpServlet implements ParameterNames, MimeTypes {
     static final Logger LOG = Logger.getLogger(BaseServlet.class.getName());
 
-    protected final String MESSAGE = "message";
+    protected static final String MESSAGE = "message";
 
     protected final int HTTP_STATUS_OK = 200;
     protected final int HTTP_STATUS_NOT_FOUND = 404;
@@ -46,8 +51,16 @@ class BaseServlet extends HttpServlet implements ParameterNames, MimeTypes {
     protected final int HTTP_STATUS_INTERNAL_SERVER_ERROR = 500;
 
     private CreateDoc create;
+    private final Provider<UserDAO> userDAOProvider;
+    @Inject private IniAdmins iniAdmins;
 
-    BaseServlet() {}
+    BaseServlet(Provider<UserDAO> userDAOProvider) {
+        this.userDAOProvider = userDAOProvider;
+    }
+
+    protected UserDAO getDAO() {
+        return userDAOProvider.get();
+    }
 
     @Inject
     protected void setCreate(CreateDoc create) {
@@ -94,5 +107,14 @@ class BaseServlet extends HttpServlet implements ParameterNames, MimeTypes {
     protected boolean booleanParameter(String name, HttpServletRequest request, boolean deflt) {
         String s = request.getParameter(name);
         return (s == null) ? deflt : Boolean.parseBoolean(s);
+    }
+
+    protected boolean isCurrentUserAdmin() {
+        Subject subject = SecurityUtils.getSubject();
+        return subject.hasRole("admin") || isAdmin((String)subject.getPrincipal());
+    }
+
+    protected  boolean isAdmin(String name) {
+        return iniAdmins.isAdmin(name);
     }
 }

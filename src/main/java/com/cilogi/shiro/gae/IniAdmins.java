@@ -1,6 +1,6 @@
-// Copyright (c) 2011 Tim Niblett. All Rights Reserved.
+// Copyright (c) 2012 Tim Niblett. All Rights Reserved.
 //
-// File:        ParameterNames.java  (17-Nov-2011)
+// File:        IniAdmins.java  (10-Oct-2012)
 // Author:      tim
 //
 // Copyright in the whole and every part of this source file belongs to
@@ -18,24 +18,24 @@
 //
 
 
-package com.cilogi.shiro.web;
+package com.cilogi.shiro.gae;
 
-/**
- * These are the parameters used to post information from the
- * client to the server.  Gathered here for easy reference.
- */
-interface ParameterNames {
-    String CODE = "code";
+import org.apache.shiro.realm.text.IniRealm;
 
-    // these 4 are from jQuery.dataTables
-    String DATATABLE_ECHO = "sEcho";
-    String DATATABLE_START = "iDisplayStart";
-    String DATATABLE_LENGTH = "iDisplayLength";
-    String DATATABLE_SEARCH = "sSearch";
+import java.util.logging.Logger;
 
-    String DELETE = "delete";
-    String TOKEN = "password";
-    String REMEMBER_ME = "rememberMe";
-    String SUSPEND = "suspend";
-    String USERNAME = "username";
+// find all the users which are admins from the ini realm
+public class IniAdmins {
+    static final Logger LOG = Logger.getLogger(IniAdmins.class.getName());
+
+    private final IniRealm realm;
+
+    public IniAdmins() {
+        IniRealm realm = new IniRealm("classpath:shiro.ini");
+        this.realm = realm;
+    }
+
+    public boolean isAdmin(String name) {
+        return realm.accountExists(name);
+    }
 }

@@ -13,10 +13,10 @@ xsi:schemaLocation="http://appengine.google.com/ns/1.0 http://googleappengine.go
     <async-session-persistence enabled="true" queue-name="default"/>
 
     <static-files>
-        <include path="**" expiration="10m"/>
-        <include path="/images/*" expiration="10m"/>
-        <include path="/**.css" expiration="10m"/>
-        <include path="/**.js" expiration="10m"/>
+        <include path="**"/>
+        <include path="/images/*"/>
+        <include path="/**.css"/>
+        <include path="/**.js"/>
     </static-files>
 
     <resource-files>

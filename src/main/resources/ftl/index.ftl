@@ -481,10 +481,10 @@ user = browse:*
               type: 'POST',
               url: shiro.userBaseUrl+"/ajaxLogin", // This is a URL on your website.
               data: {
-                  username: shiro.user,
                   password: assertion,
                   rememberMe: true
               },
+              cache: false,
               success: function(data, status, xhr) {
                   if (status == 'success') {
                       doStatus(spin, false);
@@ -505,14 +505,14 @@ user = browse:*
             // Also, make that loggedInUser will get set to null on the next page load.
             // (That's a literal JavaScript null. Not false, 0, or undefined. null.)
             shiro.status.clearStatus();
-            /*
+            
             $.ajax({
               type: 'POST',
-              url: '/auth/logout', // This is a URL on your website.
-              success: function(res, status, xhr) { window.location.reload(); },
+              url: '/logout', // This is a URL on your website.
+              success: function(res, status, xhr) {},
               error: function(res, status, xhr) { alert("logout failure" + res); }
             });
-            */
+
           }
         });
     });

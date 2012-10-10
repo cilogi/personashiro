@@ -21,9 +21,11 @@
 package com.cilogi.shiro.persona;
 
 import com.google.common.base.Preconditions;
+import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.HostAuthenticationToken;
 import org.apache.shiro.authc.RememberMeAuthenticationToken;
 
+import java.util.Map;
 import java.util.logging.Logger;
 
 
@@ -31,16 +33,15 @@ public class PersonaAuthenticationToken implements HostAuthenticationToken, Reme
     static final Logger LOG = Logger.getLogger(PersonaAuthenticationToken.class.getName());
 
     private final String token;
-    private final String principal;
+    private String principal;
     private final String host;
    private final boolean isRememberMe;
 
-    public PersonaAuthenticationToken(String token, String principal, String host, boolean isRememberMe) {
+    public PersonaAuthenticationToken(String token, String host, boolean isRememberMe) {
         Preconditions.checkNotNull(token, "You have to have an Persona token to create an authentication token");
-        Preconditions.checkNotNull(principal, "You have to have a principal (email address) to create an authentication token");
 
         this.token = token;
-        this.principal = principal;
+        this.principal = null;
         this.host = host;
         this.isRememberMe = isRememberMe;
     }
@@ -63,5 +64,18 @@ public class PersonaAuthenticationToken implements HostAuthenticationToken, Reme
     @Override
     public String getHost() {
         return host;
+    }
+    
+    public boolean isValid() {
+        return principal != null;
+    }
+
+    public void verify() throws AuthenticationException {
+        PersonaVerifier verifier = new PersonaVerifier();
+        Map<String,String> map = verifier.verify(token);
+        principal = map.get(PersonaVerifier.EMAIL_FIELD);
+        if (principal == null) {
+            throw new AuthenticationException("Can't verify token: " + token);
+        }
     }
 }

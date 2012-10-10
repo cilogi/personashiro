@@ -21,6 +21,7 @@
 
 package com.cilogi.shiro.guice;
 
+import com.cilogi.shiro.gae.IniAdmins;
 import com.cilogi.shiro.gae.UserDAO;
 import com.cilogi.shiro.gae.UserDAOProvider;
 import com.cilogi.util.doc.CreateDoc;
@@ -60,6 +61,7 @@ public class ServeLogic extends AbstractModule {
         bind(AppstatsServlet.class).in(Scopes.SINGLETON);
         bind(AppstatsFilter.class).in(Scopes.SINGLETON);
         bind(AsyncCacheFilter.class).in(Scopes.SINGLETON);// needed to sync the datastore if its running async
+        bind(IniAdmins.class).in(Scopes.SINGLETON);
         bindString("tim", "tim");
         bindString("email.from", "admin@personashiro.appspotmail.com");
         bindString("userBaseUrl", userBaseUrl);

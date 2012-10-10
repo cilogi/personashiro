@@ -24,13 +24,14 @@ package com.cilogi.shiro.web;
 import com.cilogi.shiro.gae.GaeUser;
 import com.cilogi.shiro.gae.UserDAO;
 import com.cilogi.shiro.persona.PersonaAuthenticationToken;
+import com.google.appengine.repackaged.com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.util.SavedRequest;
 import org.apache.shiro.web.util.WebUtils;
 
 import javax.inject.Inject;
@@ -49,11 +50,10 @@ import java.util.logging.Logger;
 public class LoginServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(LoginServlet.class.getName());
 
-    private final Provider<UserDAO> userDAOProvider;
-    
+
     @Inject
     LoginServlet(Provider<UserDAO> userDAOProvider) {
-        this.userDAOProvider = userDAOProvider;
+        super(userDAOProvider);
     }
 
     @Override
@@ -64,18 +64,20 @@ public class LoginServlet extends BaseServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            String password = WebUtils.getCleanParam(request, PASSWORD); // the persona token
-            String userName = WebUtils.getCleanParam(request, USERNAME);
+            String token = WebUtils.getCleanParam(request, TOKEN); // the persona token
             boolean rememberMe = WebUtils.isTrue(request, REMEMBER_ME);
             String host = request.getRemoteHost();
 
-            PersonaAuthenticationToken token = new PersonaAuthenticationToken(password, userName, host, rememberMe);
+            PersonaAuthenticationToken personaToken = new PersonaAuthenticationToken(token, host, rememberMe);
             try {
+                personaToken.verify();
                 Subject subject = SecurityUtils.getSubject();
-                loginWithNewSession(token, subject);
-                issueJson(response, HTTP_STATUS_OK, MESSAGE, "ok");
+                loginWithNewSession(personaToken, subject);
+                SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(request);
+                String redirectUrl = (savedRequest == null) ? "/index.html" : savedRequest.getRequestUrl();
+                response.sendRedirect(response.encodeRedirectURL(redirectUrl));
             } catch (AuthenticationException e) {
-                issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND, "cannot authorize " + userName + ": " + e.getMessage(), response);
+                issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND, "cannot authorize token: " + token, response);
             }
         } catch (Exception e) {
             issue(MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR, "Internal error: " + e.getMessage(), response);
@@ -89,6 +91,7 @@ public class LoginServlet extends BaseServlet {
      * @param subject
      */
     private void loginWithNewSession(PersonaAuthenticationToken token, Subject subject) {
+        Preconditions.checkArgument(token.isValid(), "Token must be valid to allow login");
         Session originalSession = subject.getSession();
 
         Map<Object, Object> attributes = Maps.newLinkedHashMap();
@@ -110,9 +113,10 @@ public class LoginServlet extends BaseServlet {
     }
 
     private void createNewUserIfNecessary(PersonaAuthenticationToken token) {
-        UserDAO dao = userDAOProvider.get();
+        Preconditions.checkNotNull(token, "Token can't be null when finding associated user");
+        UserDAO dao = getDAO();
         String principal = (String)token.getPrincipal();
-        GaeUser user = dao.findUser(principal);
+        GaeUser user = (principal == null) ? null : dao.findUser(principal);
         if (user == null) {
             user = new GaeUser(principal, Sets.newHashSet("user"), Sets.<String>newHashSet());
             user.register();

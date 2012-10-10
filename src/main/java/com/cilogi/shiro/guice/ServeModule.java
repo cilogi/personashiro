@@ -63,7 +63,7 @@ public class ServeModule extends ServletModule {
         serve(userBaseUrl + "/list").with(UserListServlet.class);
         serve(userBaseUrl + "/suspend").with(UserSuspendServlet.class);
             // Lets check mail to see when stuff bounces
-        serve("/login.jsp").with(LoginJspServlet.class);
+        serve("/login.jsp").with(LoginServlet.class);
         serve("/appstats/*").with(AppstatsServlet.class);
     }
 

@@ -24,6 +24,8 @@ package com.cilogi.shiro.web;
 import com.cilogi.shiro.gae.GaeUser;
 import com.cilogi.shiro.gae.UserDAO;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -35,28 +37,42 @@ import java.util.logging.Logger;
 public class UserSuspendServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(UserSuspendServlet.class.getName());
 
-    UserSuspendServlet() {}
+    @Inject
+    UserSuspendServlet(Provider<UserDAO> userDAOProvider) {
+        super(userDAOProvider);
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             String userName = request.getParameter(USERNAME);
-            UserDAO dao = new UserDAO();
+            UserDAO dao = getDAO();
             GaeUser user = dao.findUser(userName);
             if (user != null) {
                 boolean isSuspend = Boolean.parseBoolean(request.getParameter(SUSPEND));
                 boolean isDelete = Boolean.parseBoolean(request.getParameter(DELETE));
                 if (isDelete) {
-                    dao.deleteUser(user);
-                    issueJson(response, HTTP_STATUS_OK,
-                            MESSAGE, "User " + userName + " is deleted");
+                    if (isCurrentUserAdmin()) {
+                        dao.deleteUser(user);
+                        issueJson(response, HTTP_STATUS_OK,
+                                MESSAGE, "User " + userName + " is deleted");
+                    } else {
+                        issueJson(response, HTTP_STATUS_OK,
+                                MESSAGE, "Only admins can delete users", CODE, "404");
+                    }
                 } else {
-                    user.setSuspended(isSuspend);
-                    dao.saveUser(user, false);
-                    issueJson(response, HTTP_STATUS_OK,
-                            MESSAGE, isSuspend
-                                    ? "User " + userName + " is suspended"
-                                    : "User " + userName + " is not suspended");
+                    if (isCurrentUserAdmin()) {
+                        user.setSuspended(isSuspend);
+                        dao.saveUser(user, false);
+                        issueJson(response, HTTP_STATUS_OK,
+                                MESSAGE, isSuspend
+                                        ? "User " + userName + " is suspended"
+                                        : "User " + userName + " is not suspended");
+                    } else {
+                        issueJson(response, HTTP_STATUS_OK,
+                                MESSAGE, "Only admins can suspend users", CODE, "404");
+
+                    }
                 }
             } else {
                 LOG.warning("Can't find user " + userName);
