@@ -58,11 +58,12 @@ public class ServeModule extends ServletModule {
                 "default_encoding", "UTF-8",
                 "number_format", "0.###"
         ));
+
         serve(userBaseUrl + "/ajaxLogin").with(LoginServlet.class);
         serve(userBaseUrl + "/status").with(StatusServlet.class);
         serve(userBaseUrl + "/list").with(UserListServlet.class);
         serve(userBaseUrl + "/suspend").with(UserSuspendServlet.class);
-            // Lets check mail to see when stuff bounces
+
         serve("/login.jsp").with(LoginServlet.class);
         serve("/appstats/*").with(AppstatsServlet.class);
     }

@@ -23,7 +23,6 @@ package com.cilogi.shiro.web;
 
 import com.cilogi.shiro.guice.IniAdmins;
 import com.cilogi.shiro.gae.UserDAO;
-import com.cilogi.util.MimeTypes;
 import com.cilogi.util.doc.CreateDoc;
 import com.google.common.base.Preconditions;
 import org.apache.shiro.SecurityUtils;
@@ -40,14 +39,31 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 
-class BaseServlet extends HttpServlet implements ParameterNames, MimeTypes {
+class BaseServlet extends HttpServlet {
     static final Logger LOG = Logger.getLogger(BaseServlet.class.getName());
 
     protected static final String MESSAGE = "message";
 
+    protected final String CODE = "code";
+
+    // these 4 are from jQuery.dataTables
+    protected final String DATATABLE_ECHO = "sEcho";
+    protected final String DATATABLE_START = "iDisplayStart";
+    protected final String DATATABLE_LENGTH = "iDisplayLength";
+    protected final String DATATABLE_SEARCH = "sSearch";
+
+    protected final String DELETE = "delete";
+    protected final String TOKEN = "password";
+    protected final String REMEMBER_ME = "rememberMe";
+    protected final String SUSPEND = "suspend";
+    protected final String USERNAME = "username";
+
+    protected final String MIME_TEXT_PLAIN = "text/plain";
+    protected final String MIME_TEXT_HTML = "text/html";
+    protected final String MIME_APPLICATION_JSON = "application/json";
+
     protected final int HTTP_STATUS_OK = 200;
     protected final int HTTP_STATUS_NOT_FOUND = 404;
-    protected final int HTTP_STATUS_FORBIDDEN = 403;
     protected final int HTTP_STATUS_INTERNAL_SERVER_ERROR = 500;
 
     private CreateDoc create;
