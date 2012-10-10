@@ -20,7 +20,6 @@
 
 package com.cilogi.shiro.persona;
 
-import com.google.appengine.api.urlfetch.*;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Maps;
 import org.json.JSONObject;

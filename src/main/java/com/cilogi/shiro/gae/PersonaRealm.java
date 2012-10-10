@@ -20,7 +20,7 @@
 
 package com.cilogi.shiro.gae;
 
-import com.cilogi.shiro.persona.*;
+import com.cilogi.shiro.persona.AbstractPersonaRealm;
 
 import javax.inject.Provider;
 

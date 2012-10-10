@@ -22,7 +22,6 @@ package com.cilogi.shiro.gae;
 
 import com.cilogi.shiro.persona.IPersonaUserDAO;
 import com.google.common.collect.Sets;
-import org.apache.shiro.authz.SimpleAuthorizationInfo;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
