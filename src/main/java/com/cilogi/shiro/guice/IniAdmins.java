@@ -18,7 +18,7 @@
 //
 
 
-package com.cilogi.shiro.gae;
+package com.cilogi.shiro.guice;
 
 import org.apache.shiro.realm.text.IniRealm;
 

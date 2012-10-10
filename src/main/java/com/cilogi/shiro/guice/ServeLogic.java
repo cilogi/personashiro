@@ -21,7 +21,6 @@
 
 package com.cilogi.shiro.guice;
 
-import com.cilogi.shiro.gae.IniAdmins;
 import com.cilogi.shiro.gae.UserDAO;
 import com.cilogi.shiro.gae.UserDAOProvider;
 import com.cilogi.util.doc.CreateDoc;

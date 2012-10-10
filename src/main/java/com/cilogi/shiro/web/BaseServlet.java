@@ -21,7 +21,7 @@
 
 package com.cilogi.shiro.web;
 
-import com.cilogi.shiro.gae.IniAdmins;
+import com.cilogi.shiro.guice.IniAdmins;
 import com.cilogi.shiro.gae.UserDAO;
 import com.cilogi.util.MimeTypes;
 import com.cilogi.util.doc.CreateDoc;
