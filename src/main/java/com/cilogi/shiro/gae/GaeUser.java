@@ -25,11 +25,6 @@ import com.google.common.base.Preconditions;
 import com.googlecode.objectify.annotation.Cached;
 import com.googlecode.objectify.annotation.Indexed;
 import com.googlecode.objectify.annotation.Unindexed;
-import org.apache.shiro.crypto.RandomNumberGenerator;
-import org.apache.shiro.crypto.SecureRandomNumberGenerator;
-import org.apache.shiro.crypto.hash.Sha256Hash;
-import org.apache.shiro.util.ByteSource;
-import org.apache.shiro.util.SimpleByteSource;
 
 import javax.persistence.Id;
 import java.io.Serializable;
@@ -44,10 +39,6 @@ import java.util.logging.Logger;
 @Unindexed
 public class GaeUser implements Serializable {
     static final Logger LOG = Logger.getLogger(GaeUser.class.getName());
-
-    static final int HASH_ITERATIONS = 1;
-    static final String HASH_ALGORITHM = Sha256Hash.ALGORITHM_NAME;
-
 
     @Id
     private String name;

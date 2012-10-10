@@ -29,7 +29,6 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 
-import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Map;
 import java.util.logging.Logger;

@@ -28,7 +28,6 @@ import com.googlecode.objectify.util.DAOBase;
 import org.apache.shiro.cache.Cache;
 
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 public class UserDAO extends DAOBase {

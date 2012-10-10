@@ -21,11 +21,8 @@
 package com.cilogi.shiro.persona;
 
 import junit.framework.TestCase;
-import org.apache.shiro.web.util.WebUtils;
-
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.logging.Logger;
 
 public class TestURLEncoder extends TestCase {

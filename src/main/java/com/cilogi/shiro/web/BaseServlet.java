@@ -21,8 +21,8 @@
 
 package com.cilogi.shiro.web;
 
-import com.cilogi.shiro.guice.IniAdmins;
 import com.cilogi.shiro.gae.UserDAO;
+import com.cilogi.shiro.guice.IniAdmins;
 import com.cilogi.util.doc.CreateDoc;
 import com.google.common.base.Preconditions;
 import org.apache.shiro.SecurityUtils;

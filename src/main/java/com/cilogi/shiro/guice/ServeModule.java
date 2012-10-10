@@ -21,7 +21,10 @@
 
 package com.cilogi.shiro.guice;
 
-import com.cilogi.shiro.web.*;
+import com.cilogi.shiro.web.LoginServlet;
+import com.cilogi.shiro.web.StatusServlet;
+import com.cilogi.shiro.web.UserListServlet;
+import com.cilogi.shiro.web.UserSuspendServlet;
 import com.cilogi.util.ShiroFreemarkerServlet;
 import com.google.appengine.tools.appstats.AppstatsFilter;
 import com.google.appengine.tools.appstats.AppstatsServlet;
