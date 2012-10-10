@@ -247,7 +247,8 @@ body {
             <p>As well as Guice and Shiro</p>
             <p>the demo also uses <a href="http://twitter.github.com/bootstrap/">Bootstrap from Twitter</a>
                for its CSS framework</p>
-            <p>and <a href="http://freemarker.sourceforge.net/">Freemarker</a> for templating.</p>
+            <p><a href="http://freemarker.sourceforge.net/">Freemarker</a> for templating</p>
+            <p>and a bunch of other open source libraries which make this sort of project so simple to undertake.</p>
         </div>
         <div class="span9">
             <p>To provide a complete demo requires HTML pages.  We're using Bootstrap as the CSS framework
@@ -257,11 +258,6 @@ body {
                main page for example (this one) is pre-generated using Freemarker to avoid a wait while App Engine spins
                up an instance.  This uses the Maven plugin for <a href="http://fmpp.sourceforge.net/">FMPP</a>,
                the Freemarker pre-processor</p>
-            <p>All the administrative logic is done using <a href="http://jquery.com/">jQuery's</a> Ajax
-               features.  This is intended to decouple the login from the presentation if we wish to produce
-               a mobile version of this demo, which will require different layouts.  We also do some caching in
-               JavaScript to minimise round trips to the server to determine login status.  This doesn't compromise the
-               server-side security but speeds things up and helps bring down App Engine's costs.</p>
             <h3>Reuse</h3>
             <p>The <code>com.cilogi.shiro.gae</code>, <code>com.cilogi.shiro.persona</code>
                and <code>com.cilogi.shiro.aop</code> packages should
@@ -269,6 +265,9 @@ body {
                dependency could be removed with a little effort, Objectify somewhat more.</p>
             <p>The servlets in <code>com.cilogi.shiro.web</code> have parameters hard-wired and no
                I18N for strings, but the logic is re-usable.</p>
+            <h3>Bugs</h3>
+            <p>Please report them <a href="https://github.com/cilogi/personashiro/issues">here</a></p>
+            <h3>Thanks</h3>
             <p>The image of the lock is by 
                <a href="http://www.flickr.com/photos/renaissancechambara/">renaissancechambara</a></p>
 
@@ -391,16 +390,12 @@ body {
         });
 
         navigator.id.watch({
-          loggedInUser: shiro.user,
           onlogin: function(assertion) {
-            // A user has logged in! Here you need to:
-            // 1. Send the assertion to your backend for verification and to create a session.
-            // 2. Update your UI.
             var spin = shiro.spin.start($("#spinner"));
             shiro.status.clearStatus();
-            $.ajax({ /* <-- This example uses jQuery, but you can use whatever you'd like */
+            $.ajax({
               type: 'POST',
-              url: shiro.userBaseUrl+"/ajaxLogin", // This is a URL on your website.
+              url: shiro.userBaseUrl+"/ajaxLogin",
               data: {
                   password: assertion,
                   rememberMe: true
@@ -421,19 +416,14 @@ body {
             });
           },
           onlogout: function() {
-            // A user has logged out! Here you need to:
-            // Tear down the user's session by redirecting the user or making a call to your backend.
-            // Also, make that loggedInUser will get set to null on the next page load.
-            // (That's a literal JavaScript null. Not false, 0, or undefined. null.)
             shiro.status.clearStatus();
             
             $.ajax({
               type: 'POST',
-              url: '/logout', // This is a URL on your website.
+              url: '/logout',
               success: function(res, status, xhr) {},
               error: function(res, status, xhr) { alert("logout failure" + res); }
             });
-
           }
         });
     });

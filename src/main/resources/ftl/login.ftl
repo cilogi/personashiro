@@ -44,18 +44,11 @@
             </div>
             <form id="loginForm" method="POST" action="" style="display:none">
                 <fieldset>
-                    <div class="clearfix">
-                        <label for="username">Email Address</label>
-                        <div class="input">
-                            <input class="required email xlarge" id="username" name="username" value="tim.niblett@cilogi.com"
-                                   size="30" type="text"/>
-                        </div>
-                    </div>
-                    <div class="clearfix">
+                   <div class="clearfix">
                         <label for="password">Password</label>
 
                         <div class="input">
-                            <input class="required xlarge" id="password" name="password" size="30" type="password" value="password"/>
+                            <input class="required xlarge" id="password" name="password" size="30" type="password"/>
                         </div>
                     </div>
                   <!-- /clearfix -->
@@ -72,11 +65,6 @@
             </form>
         </section>
     </div>
-
-    <footer>
-        <p>&copy; Cilogi Limited 2012</p>
-    </footer>
-
 </div>
 <#include "inc/copyright.ftl">
 <#include "inc/_foot.ftl">
@@ -89,41 +77,14 @@ $(document).ready(function() {
     navigator.id.watch({
       loggedInUser: shiro.user,
       onlogin: function(assertion) {
-        // A user has logged in! Here you need to:
-        // 1. Send the assertion to your backend for verification and to create a session.
-        // 2. Update your UI.
-        $("#username").val(shiro.user || "user@foo.com");
         $("#password").val(assertion);
         $("#rememberMe").prop('checked', true);
         $("#loginForm").submit();
-        /*
-        $.ajax({
-          type: 'POST',
-          url: '/login.jsp', // This is a URL on your website.
-          data: {
-              username: shiro.user,
-              password: assertion,
-              rememberMe: true
-          },
-          success: function(data, status, xhr) {
-              if (status == 'success') {
-                  console.log("succeeded in posting data");
-              } else {
-                  alert("login failed: " + data.message);
-              }
-          },
-          error: function(res, status, xhr) {
-              alert("login failure" + res);
-          }
-        });
-        */
-      },
+     },
         onlogout: function() {
             shiro.status.clearStatus();
         }
     });
-
-
 });
 </script>
 
