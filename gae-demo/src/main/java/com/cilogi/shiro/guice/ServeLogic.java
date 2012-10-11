@@ -30,7 +30,7 @@ import com.cilogi.util.doc.CreateDoc;
 import com.google.appengine.api.utils.SystemProperty;
 import com.google.appengine.tools.appstats.AppstatsFilter;
 import com.google.appengine.tools.appstats.AppstatsServlet;
-import com.google.cloud.sql.jdbc.internal.Charsets;
+import com.google.common.base.Charsets;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
@@ -52,7 +52,7 @@ public class ServeLogic extends AbstractModule {
     private final String staticBaseUrl;
 
     public ServeLogic(String userBaseUrl, String staticBaseUrl) {
-        this.userBaseUrl = userBaseUrl;
+        this.userBaseUrl = isDevelopmentServer() ? "" : userBaseUrl;
         this.staticBaseUrl = staticBaseUrl;
     }
 
