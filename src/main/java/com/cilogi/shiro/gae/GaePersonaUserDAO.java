@@ -1,6 +1,6 @@
 // Copyright (c) 2012 Tim Niblett. All Rights Reserved.
 //
-// File:        PersonaUserDAO.java  (10-Oct-2012)
+// File:        GaePersonaUserDAO.java  (10-Oct-2012)
 // Author:      tim
 //
 // Copyright in the whole and every part of this source file belongs to
@@ -27,12 +27,12 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import java.util.Set;
 
-public class PersonaUserDAO implements IPersonaUserDAO {
+public class GaePersonaUserDAO implements IPersonaUserDAO {
 
     private final  Provider<UserDAO> userDAOProvider;
 
     @Inject
-    public PersonaUserDAO(Provider<UserDAO> userDAOProvider) {
+    public GaePersonaUserDAO(Provider<UserDAO> userDAOProvider) {
         this.userDAOProvider = userDAOProvider;
     }
 
@@ -41,13 +41,12 @@ public class PersonaUserDAO implements IPersonaUserDAO {
         GaeUser user = (principal == null) ? null : dao().findUser(principal);
         if (user == null) {
             user = new GaeUser(principal, Sets.newHashSet("user"), Sets.<String>newHashSet());
-            user.register();
             dao().saveUser(user, true);
         }
     }
 
     @Override
-    public boolean isUserOK(String principal) {
+    public boolean isUserExistsAndInGoodStanding(String principal) {
         GaeUser user = dao().findUser(principal);
         return !(user == null || user.isSuspended());
     }

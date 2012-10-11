@@ -32,20 +32,17 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Logger;
-
 
 @Cached
 @Unindexed
 public class GaeUser implements Serializable {
-    static final Logger LOG = Logger.getLogger(GaeUser.class.getName());
 
     @Id
     private String name;
 
-    private final Set<String> roles;
+    private Set<String> roles;
 
-    private final Set<String> permissions;
+    private Set<String> permissions;
 
     @Indexed
     private Date dateRegistered;
@@ -71,7 +68,7 @@ public class GaeUser implements Serializable {
 
         this.roles = Collections.unmodifiableSet(roles);
         this.permissions = Collections.unmodifiableSet(permissions);
-        this.dateRegistered = null;
+        this.dateRegistered = new Date();
         this.isSuspended = false;
     }
 
@@ -84,29 +81,30 @@ public class GaeUser implements Serializable {
     }
 
     public Date getDateRegistered() {
-        return dateRegistered == null ? null : new Date(dateRegistered.getTime());
-    }
-
-    public boolean isRegistered() {
-        return getDateRegistered() != null;
-    }
-
-    public void register() {
-        dateRegistered = new Date();
+        return dateRegistered;
     }
 
     public String getName() {
         return name;
     }
 
-    public Set<String> getRoles() {
-        return roles;
+    public synchronized Set<String> getRoles() {
+        return Collections.unmodifiableSet(roles);
     }
 
-    public Set<String> getPermissions() {
-        return permissions;
+    public synchronized void setRoles(Set<String> roles) {
+        this.roles.clear();
+        this.roles.addAll(roles);
     }
 
+    public synchronized Set<String> getPermissions() {
+        return Collections.unmodifiableSet(permissions);
+    }
+
+    public synchronized void setPermissions(Set<String> roles) {
+        this.permissions.clear();
+        this.permissions.addAll(roles);
+    }
 
     @Override
     public boolean equals(Object o) {

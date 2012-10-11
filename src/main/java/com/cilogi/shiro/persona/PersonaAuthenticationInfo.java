@@ -20,6 +20,7 @@
 
 package com.cilogi.shiro.persona;
 
+import com.google.common.base.Preconditions;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
@@ -34,6 +35,8 @@ public class PersonaAuthenticationInfo implements AuthenticationInfo {
     private final String principal;
 
     public PersonaAuthenticationInfo(String authToken, String principal) {
+        Preconditions.checkNotNull(authToken, "Persona authentication info can't have null token");
+        Preconditions.checkNotNull(principal, "Persona authentication info can't have null principal");
         this.authToken = authToken;
         this.principal = principal;
     }

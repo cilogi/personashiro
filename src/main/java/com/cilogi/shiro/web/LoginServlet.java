@@ -24,6 +24,7 @@ package com.cilogi.shiro.web;
 import com.cilogi.shiro.gae.UserDAO;
 import com.cilogi.shiro.persona.PersonaAuthenticationToken;
 import com.cilogi.shiro.persona.PersonaLogin;
+import com.cilogi.util.doc.CreateDoc;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.web.util.SavedRequest;
 import org.apache.shiro.web.util.WebUtils;
@@ -41,14 +42,18 @@ import java.io.IOException;
 @Singleton
 public class LoginServlet extends BaseServlet {
 
+    private static final String TOKEN = "password";
+    private static final String REMEMBER_ME = "rememberMe";
+
     private final String host;
     private final PersonaLogin personaLogin;
+    private CreateDoc create;
 
     @Inject
-    LoginServlet(Provider<UserDAO> userDAOProvider, PersonaLogin personaLogin, @Named("host") String host) {
-        super(userDAOProvider);
+    LoginServlet(PersonaLogin personaLogin, @Named("host") String host, CreateDoc create) {
         this.personaLogin = personaLogin;
         this.host = host;
+        this.create = create;
     }
 
     @Override
@@ -75,4 +80,10 @@ public class LoginServlet extends BaseServlet {
             issue(MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR, "Internal error: " + e.getMessage(), response);
         }
     }
+
+    private void showView(HttpServletResponse response, String templateName, Object... args) throws IOException {
+        String html =  create.createDocumentString(templateName, CreateDoc.map(args));
+        issue(MIME_TEXT_HTML, HTTP_STATUS_OK, html, response);
+    }
+
 }

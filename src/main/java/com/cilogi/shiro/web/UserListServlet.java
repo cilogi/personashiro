@@ -47,9 +47,17 @@ import java.util.logging.Logger;
 public class UserListServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(UserListServlet.class.getName());
 
+    // these 4 are from jQuery.dataTables
+    private static final String DATATABLE_ECHO = "sEcho";
+    private static final String DATATABLE_START = "iDisplayStart";
+    private static final String DATATABLE_LENGTH = "iDisplayLength";
+    private static final String DATATABLE_SEARCH = "sSearch";
+
+    private final Provider<UserDAO> userDAOProvider;
+
     @Inject
     UserListServlet(Provider<UserDAO> userDAOProvider) {
-        super(userDAOProvider);
+        this.userDAOProvider = userDAOProvider;
     }
 
 
@@ -71,7 +79,7 @@ public class UserListServlet extends BaseServlet {
     private void doOutput(HttpServletResponse response, String sSearch, int start, int length, String echo)
             throws JSONException, IOException {
         gen();
-        UserDAO dao = new UserDAO();
+        UserDAO dao = userDAOProvider.get();
         long nUsers = dao.getCount();
         JSONObject obj = new JSONObject();
         obj.put("iTotalRecords", nUsers);

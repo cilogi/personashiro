@@ -8,7 +8,7 @@
 
 <body>
 
-<div id="spinner" class="shiro-unset" style="position: absolute; top: 90px; left: 50%;">
+<div id="spinner"  style="position: absolute; top: 90px; left: 50%;">
 </div>
 
 <div class="topbar" data-scrollspy="scrollspy">
@@ -256,15 +256,26 @@
     }
 
     $(document).ready(function() {
-        prettyPrint();
-        var spin = shiro.spin.start($("#spinner"));
+        var spin = null;
+
+        startSpin();
         shiro.status.clearStatus();
         doStatus(spin);
-    });
 
-    $(document).ready(function() {
+
+        function stopSpin() {
+            if (spin) {
+                spin.stop();
+            }
+        }
+
+        function startSpin() {
+            spin = shiro.spin.start($("#spinner"));
+        }
+
         $("#settings").click(function(e) {
             if (!$("html").hasClass("shiro-authenticated-active")) {
+                startSpin();
                 e.preventDefault();
                 shiro.login(shiro.userBaseUrl+"/ajaxLogin", function() {
                     window.location.assign("settings.html");
@@ -274,6 +285,7 @@
         });
         $("#admin").click(function(e) {
             e.preventDefault();
+            startSpin();
             if ($("html").hasClass("shiro-user-active")) {
                 window.location.assign("listUsers.ftl");
             } else {
@@ -284,16 +296,13 @@
 
         $("#signIn").click(function(e) {
             e.preventDefault();
+            startSpin();
             navigator.id.request();
-            /*
-            shiro.login(shiro.userBaseUrl+"/ajaxLogin", function() {
-                window.location.reload();
-            });
-            */
             return false;
         });
 
         $("#signOut").click(function(e) {
+            startSpin();
             navigator.id.logout();
             shiro.status.clearStatus();
             return true;
@@ -301,7 +310,6 @@
 
         navigator.id.watch({
           onlogin: function(assertion) {
-            var spin = shiro.spin.start($("#spinner"));
             shiro.status.clearStatus();
             $.ajax({
               type: 'POST',
@@ -315,12 +323,12 @@
                   if (status == 'success') {
                       doStatus(spin, false);
                   } else {
-                      spin.stop();
+                      stopSpin();
                       alert("login failed: " + data.message);
                   }
               },
               error: function(res, status, xhr) {
-                  spin.stop();
+                  stopSpin();
                   alert("login failure" + res);
               }
             });
@@ -331,8 +339,13 @@
             $.ajax({
               type: 'POST',
               url: '/logout',
-              success: function(res, status, xhr) {},
-              error: function(res, status, xhr) { alert("logout failure" + res); }
+              success: function(res, status, xhr) {
+                  stopSpin();
+              },
+              error: function(res, status, xhr) {
+                  stopSpin();
+                  alert("logout failure" + res);
+              }
             });
           }
         });

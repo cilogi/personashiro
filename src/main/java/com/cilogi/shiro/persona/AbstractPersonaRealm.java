@@ -30,11 +30,8 @@ import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 
-import java.util.logging.Logger;
-
 
 public abstract class AbstractPersonaRealm extends AuthorizingRealm {
-    static final Logger LOG = Logger.getLogger(AbstractPersonaRealm.class.getName());
 
     private final IPersonaUserDAO personaUserDAO;
 
@@ -48,7 +45,13 @@ public abstract class AbstractPersonaRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         if (token != null && token instanceof PersonaAuthenticationToken) {
             PersonaAuthenticationToken authToken = (PersonaAuthenticationToken)token;
-            return new PersonaAuthenticationInfo((String)authToken.getCredentials(), (String)authToken.getPrincipal());
+            String credentials = (String)authToken.getCredentials();
+            String principal = (String)authToken.getPrincipal();
+            if (credentials == null || principal == null) {
+                throw new AuthenticationException("Both credential (" + credentials + ") and principal " +
+                        principal + ") must be non-null for a token to authenticate");
+            }
+            return new PersonaAuthenticationInfo(credentials, principal);
         } else {
             return null;
         }
@@ -61,8 +64,7 @@ public abstract class AbstractPersonaRealm extends AuthorizingRealm {
         if (principal == null) {
             throw new NullPointerException("Can't find a principal in the collection");
         }
-        LOG.fine("Finding authorization info for " + principal + " in DB");
-        if (personaUserDAO.isUserOK(principal)) {
+        if (personaUserDAO.isUserExistsAndInGoodStanding(principal)) {
             SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(personaUserDAO.userRoles(principal));
             info.setStringPermissions(personaUserDAO.userPermissions(principal));
             return info;

@@ -53,7 +53,6 @@ public class UserDAO extends DAOBase {
      * @return the user, after changes
      */
     public GaeUser saveUser(GaeUser user, boolean changeCount) {
-        user.register();
         ofy().put(user);
         userCache.remove(user.getName());
         if (changeCount) {

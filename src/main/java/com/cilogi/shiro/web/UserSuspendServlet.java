@@ -23,6 +23,8 @@ package com.cilogi.shiro.web;
 
 import com.cilogi.shiro.gae.GaeUser;
 import com.cilogi.shiro.gae.UserDAO;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -37,16 +39,25 @@ import java.util.logging.Logger;
 public class UserSuspendServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(UserSuspendServlet.class.getName());
 
+    private static final String DELETE = "delete";
+    private static final String SUSPEND = "suspend";
+    private static final String USERNAME = "username";
+    private static final String CODE = "code";
+
+    private final Provider<UserDAO> userDAOProvider;
+    private final IniAdmins iniAdmins;
+
     @Inject
-    UserSuspendServlet(Provider<UserDAO> userDAOProvider) {
-        super(userDAOProvider);
+    UserSuspendServlet(Provider<UserDAO> userDAOProvider, IniAdmins iniAdmins) {
+        this.userDAOProvider = userDAOProvider;
+        this.iniAdmins = iniAdmins;
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             String userName = request.getParameter(USERNAME);
-            UserDAO dao = getDAO();
+            UserDAO dao = userDAOProvider.get();
             GaeUser user = dao.findUser(userName);
             if (user != null) {
                 boolean isSuspend = Boolean.parseBoolean(request.getParameter(SUSPEND));
@@ -84,5 +95,14 @@ public class UserSuspendServlet extends BaseServlet {
             issue(MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR,
                   "Error generating JSON: " + e.getMessage(), response);
         }
+    }
+
+    private boolean isCurrentUserAdmin() {
+        Subject subject = SecurityUtils.getSubject();
+        return subject.hasRole("admin") || isAdmin((String)subject.getPrincipal());
+    }
+
+    private  boolean isAdmin(String name) {
+        return iniAdmins.isAdmin(name);
     }
 }

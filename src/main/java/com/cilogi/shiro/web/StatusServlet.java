@@ -48,9 +48,7 @@ public class StatusServlet extends BaseServlet {
     static final Logger LOG = Logger.getLogger(StatusServlet.class.getName());
 
     @Inject
-    StatusServlet(Provider<UserDAO> userDAOProvider) {
-        super(userDAOProvider);
-    }
+    StatusServlet() {}
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

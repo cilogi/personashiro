@@ -51,7 +51,6 @@ public class TestUserDAO extends TestCase {
     public void testBase() {
         UserDAO dao = new UserDAO();
         GaeUser user = new GaeUser("tim");
-        user.register();
         dao.saveUser(user, true);
         GaeUser back = dao.findUser("tim");
         assertEquals(user, back);

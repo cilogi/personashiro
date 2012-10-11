@@ -1,6 +1,6 @@
 // Copyright (c) 2012 Tim Niblett. All Rights Reserved.
 //
-// File:        OAuthRealm.java  (07-Oct-2012)
+// File:        DefaultPersonaUserDAO.java  (11-Oct-2012)
 // Author:      tim
 //
 // Copyright in the whole and every part of this source file belongs to
@@ -18,21 +18,37 @@
 //
 
 
-package com.cilogi.shiro.gae;
+package com.cilogi.shiro.persona;
 
-import com.cilogi.shiro.persona.AbstractPersonaRealm;
+import java.util.HashSet;
+import java.util.Set;
 
-import javax.inject.Provider;
+/**
+ *
+ * Use this if you don't store users in a database.
+ */
+public class DefaultPersonaUserDAO implements IPersonaUserDAO {
 
-public class PersonaRealm extends AbstractPersonaRealm {
+    public DefaultPersonaUserDAO() {
 
-    public PersonaRealm() {
-        super(new PersonaUserDAO(new MyProvider()), new MemcacheManager());
     }
 
-    private static class MyProvider implements Provider<UserDAO> {
-        public UserDAO get() {
-            return UserDAOProvider.get();
-        }
+    public void newUserIfNotExists(String principal) {
+        // do nothing
     }
+
+    public boolean isUserExistsAndInGoodStanding(String principal) {
+        return true;
+    }
+
+    public Set<String> userRoles(String principal) {
+        HashSet<String> set =  new HashSet<String>();
+        set.add("user");
+        return set;
+    }
+
+    public Set<String> userPermissions(String principal) {
+        return new HashSet<String>();
+    }
+
 }
