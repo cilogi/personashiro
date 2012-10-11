@@ -274,7 +274,7 @@
                 <configuration>
                     <serverId>appengine.google.com</serverId>
                     <sdkDir>${appengine.sdk.root}</sdkDir>
-                    <appDir>${basedir}/target/personashiro-0.1</appDir>
+                    <appDir>${basedir}/target/${artifactId}-${version}</appDir>
                 </configuration>
 
             </plugin>
