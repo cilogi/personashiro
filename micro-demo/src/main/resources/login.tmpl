@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Micro Demo Login page</title>
+</head>
+
+<body>
+
+<h1>Logging you in</h1>
+<p>Please wait a moment.</p>
+
+<script src="http://code.jquery.com/jquery.min.js"></script>
+<script src="https://login.persona.org/include.js"></script>
+<script src="js/postGet.js"></script>
+
+<script>
+    $(document).ready(function() {
+        navigator.id.request();
+
+        navigator.id.watch({
+          onlogin: function(assertion) {
+            $.postGo("", {
+                token: assertion 
+            });
+          },
+          onlogout: function() {
+             shiro.status.clearStatus();
+          }
+        });
+    });
+</script>
+</html>

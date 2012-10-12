@@ -23,6 +23,8 @@ package com.cilogi.shiro.microdemo;
 import com.cilogi.shiro.persona.DefaultPersonaUserDAO;
 import com.cilogi.shiro.persona.PersonaAuthenticationToken;
 import com.cilogi.shiro.persona.PersonaLogin;
+import com.google.common.base.Charsets;
+import com.google.common.io.ByteStreams;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.web.util.SavedRequest;
 import org.apache.shiro.web.util.WebUtils;
@@ -49,7 +51,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PrintWriter out = response.getWriter();
-        out.println(loadStringUTF8(getClass().getResource("/login.jsp")));
+        out.println(loadStringUTF8(getClass().getResource("/login.tmpl")));
     }
 
     @Override
@@ -81,32 +83,12 @@ public class LoginServlet extends HttpServlet {
         response.getWriter().println(output);
     }
 
-
     private static String loadStringUTF8(URL url) throws IOException {
-        return new String(loadBytes(url), Charset.forName("utf-8"));
-    }
-
-    private static byte[] loadBytes(URL url) throws IOException {
         InputStream is = url.openStream();
         try {
-            return copyStream(is);
+            return new String(ByteStreams.toByteArray(is), Charsets.UTF_8);
         } finally {
             is.close();
         }
     }
-    
-    private static byte[] copyStream(InputStream in) throws IOException {
-        final int BUFSZ = 4096;
-        ByteArrayOutputStream out = new ByteArrayOutputStream(BUFSZ * 20);
-        byte[] buf = new byte[BUFSZ];
-        int nRead;
-        while ((nRead = in.read(buf)) != -1) {
-            out.write(buf, 0, nRead);
-        }
-        out.flush();
-        byte[] ret = out.toByteArray();
-        out.close();
-        return ret;
-    }
-
 }

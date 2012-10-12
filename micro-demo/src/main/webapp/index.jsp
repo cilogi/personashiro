@@ -29,14 +29,17 @@
 <p>When you are logged in we show you your name.</p>
 <p>If you try to access the sensitive resource, either directly in the browser bar, or via the link, then
    you'll need to be logged in, and you'll get a login dialog when you try.</p>
-<p><button id="login">Login</button>
+<p><button id="login" class="hide">Login</button>
    <span id="logout-span" class="hide"><button id="logout">Logout</button> <span id="name">${fn:escapeXml(user)}</span></span></p>
 <p><a href="sensitive.jsp">sensitive resource you need to be logged in to access</a></p>
 <p>The full-bore demo <a href="http://personashiro.appspot.com">here</a> show more capabilities of Shiro and Persona,
    and looks better to boot.</p>
+<p>You can find more information at the <a href="https://github.com/cilogi/personashiro">PersonaShiro on GitHub</a> site</p>
 </body>
 <script src="http://code.jquery.com/jquery.min.js"></script>
 <script src="https://login.persona.org/include.js"></script>
+<script src="js/postGet.js"></script>
+
 <script>
     $(document).ready(function() {
         function log() {
@@ -57,10 +60,10 @@
           onlogin: function(assertion) {
             $.ajax({
               type: 'POST',
-              url: '/login.jsp',
+              url: '/login',
               data: {token: assertion},
               success: function(res, status, xhr) {
-                  log("success posting to login.jsp");
+                  log("success posting to login");
                   $("#name").text(res);
                   $("#logout-span").removeClass("hide");
                   $("#login").addClass("hide");
