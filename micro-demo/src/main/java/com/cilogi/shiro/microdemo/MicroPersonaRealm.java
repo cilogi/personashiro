@@ -26,6 +26,6 @@ import com.cilogi.shiro.persona.DefaultPersonaUserDAO;
 public class MicroPersonaRealm  extends AbstractPersonaRealm {
 
     public MicroPersonaRealm() {
-        super(new DefaultPersonaUserDAO(), null);
+        super(new MicroPersonaUserDAO(), null);
     }
 }

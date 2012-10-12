@@ -3,9 +3,9 @@
 App Engine comes with a very good identity solution (the <code>User
 Service</code>), based on Google Login.  The API is very simple and it
 solves the authentication and authorization problem for a lot of
-applications very simply.
+applications elegantly.
 
-There are two potential problems with the <code>User Service</code>.
+There are two problems with the `User Service`.
 
 * It is restricted to users with Google accounts.  A significant
   number of potential users may not wish to register for a Google
@@ -51,14 +51,53 @@ user for example just use the following code anywhere:
 The simplest way to configure Shiro is to create a _shiro.ini_
 file. Our micro demo provides a simple example.
 
+    [main]
+    shiro.loginUrl = /login
+    personaRealm = com.cilogi.shiro.microdemo.MicroPersonaRealm
+    securityManager.realms = $personaRealm
+
+    [users]
+    tim.niblett@cilogi.com = password, admin
+
+    [roles]
+    admin = *
+
+    [urls]
+    /login = authc
+    /sensitive.html = authc
+    /onlyadmin.html = authc, roles[admin]
+    /logout = logout
+
+In the `[main]` section the line `shiro.loginUrl = /login` defines the URL to which
+unauthorised requests (and other login requests) are redirected.  The
+line defining `personaRealm` says that we're Persona to
+authenticate. The next line installs the `PersonaRealm`as the security
+realm.
+
+The `[urls]` section is similar to the security constraints used by the
+_User Service_ as defined in `web.xml`.  The `authc` filter says
+that a user must be authenticated _in this session_ to access the
+resource.  A laxer filter is `user` which also allows a user who has
+is _remembered_ via a cookie in the browser.
+
+The `[users]` and `[roles]` section together state that only
+`tim.niblett@cilogi.com` can access _admin_ level resources of which
+`onlyadmin.html` is the example shown here.
+
+These capabilities duplicate those of the built-in _User Service_ but
+allow for any email address and for more sophisticated authorization
+if you so desire.
+
+## Setting up the demo
+
+Once you've downloaded the demo you can use `maven` to set it up.
+
+## Please give feedback
+
+This solution isn't ready for prime time yet as Persona is still in
+beta, and has a long way to go.  For those who us who'd like to
+integrate a lighweight identity and authorization system without the
+nightmare of dealing with user and password management it looks like a
+good bet.  Certainly the more of us that use it the better.
 
 
-
-A demonstration which shows one way of integrating
-[http://shiro.apache.org](Shiro security) with
-[http://code.google.com/appengine](App Engine) and
-[http://code.google.com/p/google-guice](Google Guice), running under
-[Mozilla Persona](http://www.mozilla.org/en-US/persona/).
-
-The demo, running on App Engine, can be found
-[here](http://personashiro.appspot.com).
