@@ -8,8 +8,13 @@
     
     <artifactId>persona-shiro-micro-demo</artifactId>
     <packaging>war</packaging>
-    <name>micro-demo</name>
+    <name>micro-demo</name>    
     <description>Micro demo of using persona with shiro</description>
+    
+    <properties>
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+    
     <repositories>
         <repository>
           <id>codehaus-release-repo</id>
@@ -75,9 +80,8 @@
                 <artifactId>maven-jetty-plugin</artifactId>
                 <version>6.1.26</version>
                 <configuration>
-                    <webApp>
-                     </webApp>
-               </configuration>
+                    <contextPath>/</contextPath>
+                </configuration>
             </plugin>
         </plugins>
     </build>

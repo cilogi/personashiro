@@ -6,6 +6,6 @@
 <body>
 <h1>Sensitive material, you must be logged in to see</h1>
 <p>If you got here without seeing the login dialog, then the demo has failed.</p>
-<p><a href="index.html">Go back to the main page</a></p>
+<p><a href="index.jsp">Go back to the main page</a></p>
 </body>
 </html>

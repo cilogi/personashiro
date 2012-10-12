@@ -38,7 +38,7 @@ public class PersonaAuthenticationToken implements HostAuthenticationToken, Reme
    private final boolean isRememberMe;
 
     public PersonaAuthenticationToken(String token, String host, boolean isRememberMe) {
-        Preconditions.checkNotNull(token, "You have to have an Persona token to create an authentication token");
+        Preconditions.checkNotNull(token, "You have to have a Persona token to create an authentication token");
 
         this.token = token;
         this.principal = null;

@@ -31,8 +31,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.net.URL;
+import java.nio.charset.Charset;
 
 public class LoginServlet extends HttpServlet {
 
@@ -45,7 +49,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PrintWriter out = response.getWriter();
-        out.println("<!DOCTYPE html><http lang=\"en\"><head></head><body><h1>Logging you in...</h1></body></http>");
+        out.println(loadStringUTF8(getClass().getResource("/login.jsp")));
     }
 
     @Override
@@ -57,8 +61,12 @@ public class LoginServlet extends HttpServlet {
             try {
                 personaLogin.login(personaToken);
                 SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(request);
-                String redirectUrl = (savedRequest == null) ? "/index.html" : savedRequest.getRequestUrl();
-                response.sendRedirect(response.encodeRedirectURL(redirectUrl));
+                String redirectUrl = (savedRequest == null) ? null : savedRequest.getRequestUrl();
+                if (redirectUrl != null) {
+                    response.sendRedirect(response.encodeRedirectURL(redirectUrl));
+                }  else {
+                    issue("text/plain", HttpServletResponse.SC_OK, JSPAssist.getCurrentUser(), response);
+                }
             } catch (AuthenticationException e) {
                 issue("text/plain", HttpServletResponse.SC_NOT_FOUND, "cannot authorize token: " + token, response);
             }
@@ -71,6 +79,34 @@ public class LoginServlet extends HttpServlet {
         response.setContentType(mimeType);
         response.setStatus(returnCode);
         response.getWriter().println(output);
+    }
+
+
+    private static String loadStringUTF8(URL url) throws IOException {
+        return new String(loadBytes(url), Charset.forName("utf-8"));
+    }
+
+    private static byte[] loadBytes(URL url) throws IOException {
+        InputStream is = url.openStream();
+        try {
+            return copyStream(is);
+        } finally {
+            is.close();
+        }
+    }
+    
+    private static byte[] copyStream(InputStream in) throws IOException {
+        final int BUFSZ = 4096;
+        ByteArrayOutputStream out = new ByteArrayOutputStream(BUFSZ * 20);
+        byte[] buf = new byte[BUFSZ];
+        int nRead;
+        while ((nRead = in.read(buf)) != -1) {
+            out.write(buf, 0, nRead);
+        }
+        out.flush();
+        byte[] ret = out.toByteArray();
+        out.close();
+        return ret;
     }
 
 }
