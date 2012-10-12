@@ -24,4 +24,13 @@
         <servlet-name>login</servlet-name>
         <servlet-class>com.cilogi.shiro.microdemo.LoginServlet</servlet-class>
     </servlet>
+
+    <servlet>
+        <servlet-name>default</servlet-name>
+        <servlet-class>org.mortbay.jetty.servlet.DefaultServlet</servlet-class>
+        <init-param>
+            <param-name>cacheControl</param-name>
+            <param-value>no-store,no-cache,must-revalidate</param-value>
+        </init-param>
+    </servlet>    
 </web-app>

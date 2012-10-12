@@ -47,7 +47,7 @@ public class MicroPersonaUserDAO extends DefaultPersonaUserDAO {
 
     public Set<String> userPermissions(String principal) {
         Set<String> set = Sets.newHashSet();
-        set.addAll(iniRealm.getRoles(principal));
+        set.addAll(iniRealm.getStringPermissions(principal));
         return set;
     }
 
@@ -60,11 +60,15 @@ public class MicroPersonaUserDAO extends DefaultPersonaUserDAO {
         }
         public Collection<String> getStringPermissions(String name) {
             SimpleAccount account = getUser(name);
-            return (account == null) ? Sets.<String>newHashSet() : account.getStringPermissions();
+            return (account == null)
+                    ? Sets.<String>newHashSet()
+                    : (account.getStringPermissions() == null ? Sets.<String>newHashSet() : account.getStringPermissions());
         }
         public Collection<String> getRoles(String name) {
             SimpleAccount account = getUser(name);
-            return (account == null) ? Sets.<String>newHashSet() : account.getRoles();
+            return (account == null)
+                    ? Sets.<String>newHashSet()
+                    : (account.getRoles() == null ? Sets.<String>newHashSet() : account.getRoles());
         }
     }
 }
