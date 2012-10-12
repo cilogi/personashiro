@@ -28,8 +28,8 @@
       onlogin: function(assertion) {
         $.ajax({
           type: 'POST',
-          url: '/auth/login', // This is a URL on your website.
-          data: {assertion: assertion},
+          url: '/persona-shiro-micro-demo/login.jsp', // This is a URL on your website.
+          data: {token: assertion},
           success: function(res, status, xhr) { window.location.reload(); },
           error: function(res, status, xhr) { alert("login failure" + res); }
         });
