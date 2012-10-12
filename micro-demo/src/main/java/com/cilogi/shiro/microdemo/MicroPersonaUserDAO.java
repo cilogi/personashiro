@@ -40,7 +40,7 @@ public class MicroPersonaUserDAO extends DefaultPersonaUserDAO {
     }
 
     public Set<String> userRoles(String principal) {
-        Set<String> set =  Sets.newHashSet();
+        Set<String> set =  Sets.newHashSet("user");
         set.addAll(iniRealm.getRoles(principal));
         return set;
     }
