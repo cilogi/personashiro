@@ -27,11 +27,9 @@ import org.apache.shiro.realm.text.IniRealm;
 
 import java.util.Collection;
 import java.util.Set;
-import java.util.logging.Logger;
 
 
 public class MicroPersonaUserDAO extends DefaultPersonaUserDAO {
-    static final Logger LOG = Logger.getLogger(MicroPersonaUserDAO.class.getName());
 
     private final MyIniRealm iniRealm;
 
