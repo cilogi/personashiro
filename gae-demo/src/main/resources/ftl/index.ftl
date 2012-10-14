@@ -17,10 +17,9 @@
             <a class="brand" href="#">PersonaShiro</a>
             <ul class="nav">
                 <li class="active"><a href="#">Home</a></li>
-                <li><a href="#motivation">Motivation</a></li>
-                <li><a href="#persona">Persona</a></li>
+                <li><a href="#why">Why</a></li>
+                <li><a href="#how">How</a></li>
                 <li><a href="#shiro">Shiro</a></li>
-                <li><a href="#about">About</a></li>
                 <li><a id="admin" class="shiro-user" style="color:red" href="/listUsers.ftl">Admin</a></li>
             </ul>
             <#include "inc/loginoutbutton.ftl">
@@ -30,6 +29,7 @@
 
 
 <div class="container">
+
 
 <!-- Main hero unit for a primary marketing message or call to action -->
 <div class="hero-unit">
@@ -73,9 +73,9 @@
 </div>
 
 
-<section id="motivation">
+<section id="why">
     <div class="page-header">
-        <h1>Motivation
+        <h1>Why
             <small>why are we doing this?</small>
         </h1>
     </div>
@@ -83,17 +83,13 @@
         <div class="span4">
             <h2>Take home</h2>
 
-            <p>App Engine is great</p>
+            <p>A user identity service for App Engine</p>
 
-            <p>but quirky</p>
+            <p>leveraging <a href="http://www.mozilla.org/persona">Persona</a> for identity</p>
 
-            <p>and doesn't come with a general authentication and authorization service.</p>
+            <p>and <a href="http://shiro.apache.org/">Apache Shiro</a> for Authentication and Authorization.</p>
 
-            <p>Persona is an interesting take on identity management.</p>
-
-            <p>Shiro is good for authorization and
-                we've done the needed porting, and
-                provided some simple user management.</p>
+            <p>As simple to use as the built-in user service, but more functional.</p>
         </div>
         <div class="span9">
             <p>App Engine is a great. You can create a small free website and
@@ -122,31 +118,31 @@
             <p>This sample provides an identity management system
                 which can easily be extended, or used as-is.  The ease of use is the same as the built-in
                 service, but you can use it with any Email address and the security framework is more
-                flexible if you ever need it.</p>
+                flexible if you ever need it.  Its a lighter-weight solution than
+               <a href="http://static.springsource.org/spring-security/site/">Spring Security</a></p>
        </div>
     </div>
 </section>
 
-<section id="persona">
+<section id="how">
     <div class="page-header">
-        <h1>Interfacing Persona
-            <small>step by step</small>
+        <h1>How
+            <small>to get started</small>
         </h1>
     </div>
     <div class="row">
         <div class="span4">
             <h2>In Brief</h2>
 
-            <p><a href="http://www.mozilla.org/persona">Persona</a> is a new initiative by Mozilla to provide simple identity
-                management based on Email addresses.</p>
+            <p><a href="https://github.com/cilogi/personashiro/wiki/The-Micro-Demo">Look at the micro-demo.</a></p>
         </div>
         <div class="span9">
-            <p>Persona does most of its work in JavaScript, on the client, communicating with the identity server using an
-                <code>iframe</code>.  An identity <em>assertion</em> is generated
-               client-side which contains all the information required to authenticate.  The assertion is passed
-               from the browser to the server.  The server  verifies this assertion (with Mozilla at the moment) and
-               receives back information including the verified Email associated with the token.</p>
-            <p> We have provided a lightweight interface to Shiro for the token and its verification.</p>
+            <p>To get started clone the repository at <a href="https://github.com/cilogi/personashiro">https://github.com/cilogi/personashiro</a>
+            <p>We have created a <em>micro</em> demo which runs from maven and show how to get Persona working with
+               Shiro as simply as possible.  Detailed instructions are <a href="https://github.com/cilogi/personashiro/wiki/The-Micro-Demo">here</a></p>
+            <p>In order to run Persona and Shiro under App Engine the micro demo should work fine.  The <em>gae-demo</em>
+               module shows how to (a) add a cache manager based on the App Engine Memcache service and (b) how to add some
+               basic user management, with the user data being stored with the Datastore.</p>
         </div>
     </div>
 </section>
@@ -154,7 +150,7 @@
 <section id="shiro">
     <div class="page-header">
         <h1>Adapting Shiro
-            <small>what we had to do</small>
+            <small>for the demo</small>
         </h1>
     </div>
     <div class="row">
@@ -173,48 +169,6 @@
                the user is extracted and we can login.</p>
             <p>For the demo we have also introduced a user class, <code>GaeUser</code> which can
                be stored in the App Engine datastore.  We've also provided a simple way to list users.</p>
-            <p>In keeping with the simple setup of App Engine's user service the demo allows any user
-               in the <code>shiro.ini</code> setup file to be an admin.</p>
-        </div>
-    </div>
-</section>
-<section id="about">
-    <div class="page-header">
-        <h1>About
-            <small>the other tools</small>
-        </h1>
-    </div>
-    <div class="row">
-        <div class="span4">
-            <h2>Also using</h2>
-
-            <p>As well as Guice and Shiro</p>
-            <p>the demo also uses <a href="http://twitter.github.com/bootstrap/">Bootstrap from Twitter</a>
-               for its CSS framework</p>
-            <p><a href="http://freemarker.sourceforge.net/">Freemarker</a> for templating</p>
-            <p>and a bunch of other open source libraries which make this sort of project so simple to undertake.</p>
-        </div>
-        <div class="span9">
-            <p>To provide a complete demo requires HTML pages.  We're using Bootstrap as the CSS framework
-               (it actually uses <a href="http://lesscss.org/">less</a> to create CSS) which makes well laid out sites
-               easy for those of us with no layout skills.</p>
-            <p>The HTML pages are organised using the Freemarker templating language. The <code>index.html</code>
-               main page for example (this one) is pre-generated using Freemarker to avoid a wait while App Engine spins
-               up an instance.  This uses the Maven plugin for <a href="http://fmpp.sourceforge.net/">FMPP</a>,
-               the Freemarker pre-processor</p>
-            <h3>Reuse</h3>
-            <p>The <code>com.cilogi.shiro.gae</code>, <code>com.cilogi.shiro.persona</code>
-               and <code>com.cilogi.shiro.aop</code> packages should
-               be easily re-usable.  There are dependencies on Shiro, Objectify and Guava.  The Guava
-               dependency could be removed with a little effort, Objectify somewhat more.</p>
-            <p>The servlets in <code>com.cilogi.shiro.web</code> have parameters hard-wired and no
-               I18N for strings, but the logic is re-usable.</p>
-            <h3>Bugs</h3>
-            <p>Please report them <a href="https://github.com/cilogi/personashiro/issues">here</a></p>
-            <h3>Thanks</h3>
-            <p>The image of the lock is by 
-               <a href="http://www.flickr.com/photos/renaissancechambara/">renaissancechambara</a></p>
-
         </div>
     </div>
 </section>
