@@ -1,4 +1,4 @@
-<#assign title="Shiro on GAE Login">
+<#assign title="PersonaShiro Login">
 <#assign style="substyle.css">
 
 <!DOCTYPE html>
@@ -12,7 +12,7 @@
 <div class="topbar">
     <div class="topbar-inner">
         <div class="container">
-            <a class="brand" href="/index.html">Shiro on GAE</a>
+            <a class="brand" href="/index.html">PersonaShiro</a>
             <ul class="nav">
                 <li class="active"><a href="/index.html">Home</a></li>
             </ul>
