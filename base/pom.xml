@@ -43,6 +43,17 @@
           </execution>
         </executions>
       </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>2.9</version>
+          <configuration>
+              <links>
+                <link>http://shiro.apache.org/static/current/apidocs/</link>
+              </links>
+          </configuration>
+        </plugin>
+        
     </plugins>      
   </build>
 
