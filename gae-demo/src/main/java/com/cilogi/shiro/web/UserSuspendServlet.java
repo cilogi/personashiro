@@ -45,12 +45,10 @@ public class UserSuspendServlet extends BaseServlet {
     private static final String CODE = "code";
 
     private final Provider<UserDAO> userDAOProvider;
-    private final IniAdmins iniAdmins;
 
     @Inject
-    UserSuspendServlet(Provider<UserDAO> userDAOProvider, IniAdmins iniAdmins) {
+    UserSuspendServlet(Provider<UserDAO> userDAOProvider) {
         this.userDAOProvider = userDAOProvider;
-        this.iniAdmins = iniAdmins;
     }
 
     @Override
@@ -99,10 +97,6 @@ public class UserSuspendServlet extends BaseServlet {
 
     private boolean isCurrentUserAdmin() {
         Subject subject = SecurityUtils.getSubject();
-        return subject.hasRole("admin") || isAdmin((String)subject.getPrincipal());
-    }
-
-    private  boolean isAdmin(String name) {
-        return iniAdmins.isAdmin(name);
+        return subject.hasRole("admin");
     }
 }

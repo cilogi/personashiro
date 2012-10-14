@@ -90,7 +90,10 @@ if you so desire.
 
 ## Setting up the demo
 
-Once you've downloaded the demo you can use `maven` to set it up.
+Once you've downloaded the demo you can use `maven` to set it
+up. There are 3 modules: _persona-shiro_ is the library which
+interfaces Persona with Shiro; _gae-demo_ shows how _perona-shiro_ can
+be integrated App Engine, and includes some basic user handling
 
 ## Please give feedback
 

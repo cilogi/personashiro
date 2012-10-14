@@ -32,7 +32,7 @@
 <p><button id="login" class="hide">Login</button>
    <span id="logout-span" class="hide"><button id="logout">Logout</button> <span id="name">${fn:escapeXml(user)}</span></span></p>
 <p><a href="sensitive.html">sensitive resource you need to be logged in to access</a></p>
-<p><a href="onlyadmin.html">sensitive resource you need to be logged in to <em>and</em> with admin priviledges to access</a></p>
+<p><a href="onlyadmin.html">sensitive resource you need to be logged in to <em>and</em> with admin privileges to access</a></p>
 <p>The full-bore demo <a href="http://personashiro.appspot.com">here</a> show more capabilities of Shiro and Persona,
    and looks better to boot.</p>
 <p>You can find more information at the <a href="https://github.com/cilogi/personashiro">PersonaShiro on GitHub</a> site</p>

@@ -25,6 +25,8 @@
         <servlet-class>com.cilogi.shiro.microdemo.LoginServlet</servlet-class>
     </servlet>
 
+    <!-- Its important to make sure that sensitive information
+         isn't cached by browser (or intermediate hosts) -->
     <servlet>
         <servlet-name>default</servlet-name>
         <servlet-class>org.mortbay.jetty.servlet.DefaultServlet</servlet-class>

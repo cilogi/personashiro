@@ -1,6 +1,6 @@
 // Copyright (c) 2012 Tim Niblett. All Rights Reserved.
 //
-// File:        IniAdmins.java  (10-Oct-2012)
+// File:        PersonaIniRealm.java  (14-Oct-2012)
 // Author:      tim
 //
 // Copyright in the whole and every part of this source file belongs to
@@ -18,23 +18,26 @@
 //
 
 
-package com.cilogi.shiro.web;
+package com.cilogi.shiro.persona;
 
 import org.apache.shiro.realm.text.IniRealm;
 
 import java.util.logging.Logger;
 
-// find all the users which are admins from the ini realm
-public class IniAdmins {
-    static final Logger LOG = Logger.getLogger(IniAdmins.class.getName());
 
-    private final IniRealm realm;
+public class PersonaIniRealm extends IniRealm {
+    static final Logger LOG = Logger.getLogger(PersonaIniRealm.class.getName());
 
-    public IniAdmins() {
-        this.realm = new IniRealm("classpath:shiro.ini");
+    public PersonaIniRealm() {
+        this("classpath:shiro.ini");
     }
 
-    public boolean isAdmin(String name) {
-        return realm.accountExists(name);
+    public PersonaIniRealm(String locationOfIni) {
+        super(locationOfIni);
+        setCredentialsMatcher(new PersonaCredentialsMatcher());
+        setAuthenticationTokenClass(PersonaAuthenticationToken.class);
     }
+
+    @Override
+    protected void onInit() {}
 }

@@ -33,10 +33,4 @@ public class JSPAssist {
         String principal = (String)subject.getPrincipal();
         return (principal == null) ? "" : principal;
     }
-
-    public static String getLoginClass() {
-        Subject subject = SecurityUtils.getSubject();
-        boolean isLoggedIn = subject.isRemembered() || subject.isAuthenticated();
-        return isLoggedIn ? "logged-in" : "logged-out";
-    }
 }

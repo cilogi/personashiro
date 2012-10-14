@@ -23,9 +23,14 @@ package com.cilogi.shiro.microdemo;
 import com.cilogi.shiro.persona.AbstractPersonaRealm;
 import com.cilogi.shiro.persona.DefaultPersonaUserDAO;
 
+/**
+ * A realm that doesn't hook up with any persistence mechanism to
+ * store user names, properties, permissions, etc.  In practice
+ * one would record information about the users one has seen.
+ */
 public class MicroPersonaRealm  extends AbstractPersonaRealm {
 
     public MicroPersonaRealm() {
-        super(new MicroPersonaUserDAO(), null);
+        super(new DefaultPersonaUserDAO(), null);
     }
 }

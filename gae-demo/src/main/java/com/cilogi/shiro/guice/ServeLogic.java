@@ -25,7 +25,6 @@ import com.cilogi.shiro.gae.GaePersonaUserDAO;
 import com.cilogi.shiro.gae.UserDAO;
 import com.cilogi.shiro.gae.UserDAOProvider;
 import com.cilogi.shiro.persona.IPersonaUserDAO;
-import com.cilogi.shiro.web.IniAdmins;
 import com.cilogi.util.doc.CreateDoc;
 import com.google.appengine.api.utils.SystemProperty;
 import com.google.appengine.tools.appstats.AppstatsFilter;
@@ -63,7 +62,6 @@ public class ServeLogic extends AbstractModule {
         bind(AppstatsServlet.class).in(Scopes.SINGLETON);
         bind(AppstatsFilter.class).in(Scopes.SINGLETON);
         bind(AsyncCacheFilter.class).in(Scopes.SINGLETON);// needed to sync the datastore if its running async
-        bind(IniAdmins.class).in(Scopes.SINGLETON);
         bind(IPersonaUserDAO.class).to(GaePersonaUserDAO.class).in(Scopes.SINGLETON);
         bindString("tim", "tim");
         bindString("email.from", "admin@personashiro.appspotmail.com");
