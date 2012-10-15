@@ -86,7 +86,11 @@ public class LoginServlet extends BaseServlet {
                 }  else {
                     Subject subject = SecurityUtils.getSubject();
                     String principal = (String)subject.getPrincipal();
-                    issue("text/plain", HttpServletResponse.SC_OK, "Logged in as " + principal, response);
+                    issueJson(response, HTTP_STATUS_OK,
+                            MESSAGE, "known",
+                            "name", principal,
+                            "authenticated", Boolean.toString(subject.isAuthenticated()),
+                            "admin", Boolean.toString(hasRole(subject, "admin")));
                 }
             } catch (AuthenticationException e) {
                 LOG.info("Authorization failure: " + e.getMessage());

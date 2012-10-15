@@ -22,6 +22,8 @@
 package com.cilogi.shiro.web;
 
 import com.google.common.base.Preconditions;
+import org.apache.shiro.authz.AuthorizationException;
+import org.apache.shiro.subject.Subject;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -71,5 +73,14 @@ class BaseServlet extends HttpServlet {
     protected int intParameter(String name, HttpServletRequest request, int deflt) {
         String s = request.getParameter(name);
         return (s == null) ? deflt : Integer.parseInt(s);
+    }
+
+    protected static boolean hasRole(Subject subject, String role) {
+        try {
+            subject.checkRole(role);
+            return true;
+        }  catch (AuthorizationException e)  {
+            return false;
+        }
     }
 }

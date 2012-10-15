@@ -179,23 +179,28 @@
 <#include "inc/_foot.ftl">
 <script>
 
+    function goodLogin(data) {
+        $("html").removeClass("shiro-none-active");
+        if (data.message == "known") {
+            $("html").removeClass("shiro-guest-active");
+            $("html").addClass("shiro-user-active");
+            $("span.shiro-principal").text(data.name);
+            if (data.admin == "true") {
+                $("html").addClass("shiro-admin-active");
+            }
+        } else {
+            $("html").addClass("shiro-guest-active");
+        }
+        shiro.user = data.name;
+    }
+
     function doStatus(spin) {
+        console.log("running status");
         shiro.status.runStatus({
             success: function(data, status) {
                 spin.stop();
                 if (status == 'success') {
-                    $("html").removeClass("shiro-none-active");
-                    if (data.message == "known") {
-                        $("html").removeClass("shiro-guest-active");
-                        $("html").addClass("shiro-user-active");
-                        $("span.shiro-principal").text(data.name);
-                        if (data.admin == "true") {
-                            $("html").addClass("shiro-admin-active");
-                        }
-                    } else {
-                        $("html").addClass("shiro-guest-active");
-                    }
-                    shiro.user = data.name;
+                    goodLogin(data);
                 } else {
                     alert("status check failed: " + data.message);
                 }
@@ -210,9 +215,15 @@
     $(document).ready(function() {
         var spin = null;
 
+        $(document).ajaxStart($.blockUI({
+            message: null,
+            css: {backgroundColor: "transparent", padding: 0, "border-style": "none"},
+            overlayCSS: {backgroundColor: "transparent"}
+        })).ajaxStop($.unblockUI);
+
         startSpin();
         shiro.status.clearStatus();
-        doStatus(spin);
+        //doStatus(spin);
 
 
         function stopSpin() {
@@ -270,9 +281,14 @@
                   password: assertion,
                   rememberMe: true
               },
+              dataType: "json",
               cache: false,
               success: function(data, status, xhr) {
-                  doStatus(spin, false);
+                  if (status == "success") {
+                    goodLogin(data);
+                  }
+                  stopSpin();
+                  //doStatus(spin, false);
               },
               error: function(res, status, xhr) {
                   stopSpin();
@@ -282,11 +298,14 @@
           },
           onlogout: function() {
             shiro.status.clearStatus();
-            
+
             $.ajax({
               type: 'POST',
               url: '/logout',
               success: function(res, status, xhr) {
+                  $("html").removeClass("shiro-none-active");
+                  $("html").removeClass("shiro-user-active");
+                  $("html").addClass("shiro-guest-active");
                   stopSpin();
               },
               error: function(res, status, xhr) {

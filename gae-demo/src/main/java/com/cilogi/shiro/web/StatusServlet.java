@@ -76,12 +76,4 @@ public class StatusServlet extends BaseServlet {
         }
     }
 
-    private static boolean hasRole(Subject subject, String role) {
-        try {
-            subject.checkRole(role);
-            return true;
-        }  catch (AuthorizationException e)  {
-            return false;
-        }
-    }
 }

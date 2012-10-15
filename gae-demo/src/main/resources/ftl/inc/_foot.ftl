@@ -6,6 +6,7 @@
 <script src="${staticBaseUrl}js/lib/jquery.validate.min.js"></script>
 <script src="${staticBaseUrl}js/lib/spin.js"></script>
 <script src="${staticBaseUrl}js/lib/jquery.busy.min.js"></script>
+<script src="${staticBaseUrl}js/lib/jquery.blockUI.js"></script>
 
 <script src="${staticBaseUrl}assets/js/google-code-prettify/prettify.js"></script>
 

@@ -96,11 +96,12 @@ body {
 }
 
 
-    .shiro-none-active .shiro-user, .shiro-none-active .shiro-guest {
+    .shiro-none-active .shiro-user, .shiro-none-active .shiro-guest, .shiro-none-active .shiro-admin {
         display: none;
     }
 
-    .shiro-guest-active .shiro-user, .shiro-user-active .shiro-guest, .shiro-guest-active .shiro-unset, .shiro-user-active .shiro-unset {
+    .shiro-guest-active .shiro-user,  .shiro-user-active .shiro-guest,
+    .shiro-guest-active .shiro-unset, .shiro-user-active .shiro-unset {
         display: none;
     }
 
@@ -162,6 +163,7 @@ body {
 <script src="js/lib/jquery.validate.min.js"></script>
 <script src="js/lib/spin.js"></script>
 <script src="js/lib/jquery.busy.min.js"></script>
+<script src="js/lib/jquery.blockUI.js"></script>
 
 <script src="assets/js/google-code-prettify/prettify.js"></script>
 

@@ -39,11 +39,12 @@ body {
     text-align: center;
 }
 
-    .shiro-none-active .shiro-user, .shiro-none-active .shiro-guest {
+    .shiro-none-active .shiro-user, .shiro-none-active .shiro-guest, .shiro-none-active .shiro-admin {
         display: none;
     }
 
-    .shiro-guest-active .shiro-user, .shiro-user-active .shiro-guest, .shiro-guest-active .shiro-unset, .shiro-user-active .shiro-unset {
+    .shiro-guest-active .shiro-user,  .shiro-user-active .shiro-guest,
+    .shiro-guest-active .shiro-unset, .shiro-user-active .shiro-unset {
         display: none;
     }
 
@@ -242,6 +243,7 @@ body {
 <script src="js/lib/jquery.validate.min.js"></script>
 <script src="js/lib/spin.js"></script>
 <script src="js/lib/jquery.busy.min.js"></script>
+<script src="js/lib/jquery.blockUI.js"></script>
 
 <script src="assets/js/google-code-prettify/prettify.js"></script>
 
@@ -269,26 +271,28 @@ body {
 
 <script>
 
+    function goodLogin(data) {
+        $("html").removeClass("shiro-none-active");
+        if (data.message == "known") {
+            $("html").removeClass("shiro-guest-active");
+            $("html").addClass("shiro-user-active");
+            $("span.shiro-principal").text(data.name);
+            if (data.admin == "true") {
+                $("html").addClass("shiro-admin-active");
+            }
+        } else {
+            $("html").addClass("shiro-guest-active");
+        }
+        shiro.user = data.name;
+    }
+
     function doStatus(spin) {
+        console.log("running status");
         shiro.status.runStatus({
             success: function(data, status) {
                 spin.stop();
                 if (status == 'success') {
-                    $("html").removeClass("shiro-none-active");
-                    if (data.message == "known") {
-                        $("html").removeClass("shiro-guest-active");
-                        $("html").addClass("shiro-user-active");
-                        $("span.shiro-principal").text(data.name);
-                        if (data.authenticated == "true") {
-                            $("html").addClass("shiro-authenticated-active");
-                        }
-                        if (data.admin == "true") {
-                            $("html").addClass("shiro-admin-active");
-                        }
-                    } else {
-                        $("html").addClass("shiro-guest-active");
-                    }
-                    shiro.user = data.name;
+                    goodLogin(data);
                 } else {
                     alert("status check failed: " + data.message);
                 }
@@ -303,9 +307,15 @@ body {
     $(document).ready(function() {
         var spin = null;
 
+        $(document).ajaxStart($.blockUI({
+            message: null,
+            css: {backgroundColor: "transparent", padding: 0, "border-style": "none"},
+            overlayCSS: {backgroundColor: "transparent"}
+        })).ajaxStop($.unblockUI);
+
         startSpin();
         shiro.status.clearStatus();
-        doStatus(spin);
+        //doStatus(spin);
 
 
         function stopSpin() {
@@ -363,9 +373,14 @@ body {
                   password: assertion,
                   rememberMe: true
               },
+              dataType: "json",
               cache: false,
               success: function(data, status, xhr) {
-                  doStatus(spin, false);
+                  if (status == "success") {
+                    goodLogin(data);
+                  }
+                  stopSpin();
+                  //doStatus(spin, false);
               },
               error: function(res, status, xhr) {
                   stopSpin();
@@ -375,11 +390,14 @@ body {
           },
           onlogout: function() {
             shiro.status.clearStatus();
-            
+
             $.ajax({
               type: 'POST',
               url: '/logout',
               success: function(res, status, xhr) {
+                  $("html").removeClass("shiro-none-active");
+                  $("html").removeClass("shiro-user-active");
+                  $("html").addClass("shiro-guest-active");
                   stopSpin();
               },
               error: function(res, status, xhr) {
