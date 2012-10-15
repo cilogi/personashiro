@@ -37,10 +37,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 
 @Singleton
 public class LoginServlet extends BaseServlet {
+    static final Logger LOG = Logger.getLogger(LoginServlet.class.getName());
 
     private static final String TOKEN = "password";
     private static final String REMEMBER_ME = "rememberMe";
@@ -72,11 +74,14 @@ public class LoginServlet extends BaseServlet {
                 personaLogin.login(personaToken);
                 SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(request);
                 String redirectUrl = (savedRequest == null) ? "/index.html" : savedRequest.getRequestUrl();
+                LOG.info("redirect to " + ((savedRequest == null) ? "home" : redirectUrl));
                 response.sendRedirect(response.encodeRedirectURL(redirectUrl));
             } catch (AuthenticationException e) {
+                LOG.info("Authorization failure: " + e.getMessage());
                 issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND, "cannot authorize token: " + token, response);
             }
         } catch (Exception e) {
+            LOG.info("Internal error: " + e.getMessage());
             issue(MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR, "Internal error: " + e.getMessage(), response);
         }
     }
