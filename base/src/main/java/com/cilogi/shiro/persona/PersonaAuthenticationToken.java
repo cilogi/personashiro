@@ -21,9 +21,7 @@
 package com.cilogi.shiro.persona;
 
 import com.google.common.base.Preconditions;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.HostAuthenticationToken;
-import org.apache.shiro.authc.RememberMeAuthenticationToken;
+import org.apache.shiro.authc.*;
 
 import java.util.Map;
 import java.util.logging.Logger;
@@ -78,4 +76,15 @@ public class PersonaAuthenticationToken implements HostAuthenticationToken, Reme
             throw new AuthenticationException("Can't verify token: " + token);
         }
     }
+
+    public AuthenticationInfo doGetAuthenticationInfo() throws AuthenticationException {
+        String credentials = (String)getCredentials();
+        String principal = (String)getPrincipal();
+        if (credentials == null || principal == null) {
+            throw new AuthenticationException("Both credential (" + credentials + ") and principal " +
+                    principal + ") must be non-null for a token to authenticate");
+        }
+        return new PersonaAuthenticationInfo(credentials, principal);
+    }
+
 }

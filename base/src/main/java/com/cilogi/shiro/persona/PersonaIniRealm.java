@@ -20,6 +20,9 @@
 
 package com.cilogi.shiro.persona;
 
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationInfo;
+import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.realm.text.IniRealm;
 
 import java.util.logging.Logger;
@@ -37,6 +40,16 @@ public class PersonaIniRealm extends IniRealm {
         setCredentialsMatcher(new PersonaCredentialsMatcher());
         setAuthenticationTokenClass(PersonaAuthenticationToken.class);
     }
+
+    @Override
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+        if (token != null && token instanceof PersonaAuthenticationToken) {
+            return ((PersonaAuthenticationToken) token).doGetAuthenticationInfo();
+        } else {
+            return null;
+        }
+    }
+
 
     @Override
     protected void onInit() {}

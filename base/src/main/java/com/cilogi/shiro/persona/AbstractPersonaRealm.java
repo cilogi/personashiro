@@ -44,14 +44,7 @@ public abstract class AbstractPersonaRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         if (token != null && token instanceof PersonaAuthenticationToken) {
-            PersonaAuthenticationToken authToken = (PersonaAuthenticationToken)token;
-            String credentials = (String)authToken.getCredentials();
-            String principal = (String)authToken.getPrincipal();
-            if (credentials == null || principal == null) {
-                throw new AuthenticationException("Both credential (" + credentials + ") and principal " +
-                        principal + ") must be non-null for a token to authenticate");
-            }
-            return new PersonaAuthenticationInfo(credentials, principal);
+            return ((PersonaAuthenticationToken) token).doGetAuthenticationInfo();
         } else {
             return null;
         }
