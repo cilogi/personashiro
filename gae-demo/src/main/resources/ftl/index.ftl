@@ -189,9 +189,6 @@
                         $("html").removeClass("shiro-guest-active");
                         $("html").addClass("shiro-user-active");
                         $("span.shiro-principal").text(data.name);
-                        if (data.authenticated == "true") {
-                            $("html").addClass("shiro-authenticated-active");
-                        }
                         if (data.admin == "true") {
                             $("html").addClass("shiro-admin-active");
                         }
@@ -232,7 +229,7 @@
             if (!$("html").hasClass("shiro-authenticated-active")) {
                 startSpin();
                 e.preventDefault();
-                shiro.login(shiro.userBaseUrl+"/ajaxLogin", function() {
+                shiro.login("/login", function() {
                     window.location.assign("settings.html");
                 });
                 return false;
@@ -268,19 +265,14 @@
             shiro.status.clearStatus();
             $.ajax({
               type: 'POST',
-              url: shiro.userBaseUrl+"/ajaxLogin",
+              url: "/login",
               data: {
                   password: assertion,
                   rememberMe: true
               },
               cache: false,
               success: function(data, status, xhr) {
-                  if (status == 'success') {
-                      doStatus(spin, false);
-                  } else {
-                      stopSpin();
-                      alert("login failed: " + data.message);
-                  }
+                  doStatus(spin, false);
               },
               error: function(res, status, xhr) {
                   stopSpin();

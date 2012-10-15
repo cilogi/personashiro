@@ -22,11 +22,12 @@
 <style type="text/css">
     <#include "${style}">
 
-    .shiro-none-active .shiro-user, .shiro-none-active .shiro-guest {
+    .shiro-none-active .shiro-user, .shiro-none-active .shiro-guest, .shiro-none-active .shiro-admin {
         display: none;
     }
 
-    .shiro-guest-active .shiro-user, .shiro-user-active .shiro-guest, .shiro-guest-active .shiro-unset, .shiro-user-active .shiro-unset {
+    .shiro-guest-active .shiro-user,  .shiro-user-active .shiro-guest,
+    .shiro-guest-active .shiro-unset, .shiro-user-active .shiro-unset {
         display: none;
     }
 

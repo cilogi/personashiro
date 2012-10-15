@@ -62,12 +62,11 @@ public class ServeModule extends ServletModule {
                 "number_format", "0.###"
         ));
 
-        serve(userBaseUrl + "/ajaxLogin").with(LoginServlet.class);
+        serve("/login").with(LoginServlet.class);
         serve(userBaseUrl + "/status").with(StatusServlet.class);
         serve(userBaseUrl + "/list").with(UserListServlet.class);
         serve(userBaseUrl + "/suspend").with(UserSuspendServlet.class);
 
-        serve("/login.jsp").with(LoginServlet.class);
         serve("/appstats/*").with(AppstatsServlet.class);
     }
 

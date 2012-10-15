@@ -25,7 +25,9 @@ import com.cilogi.shiro.gae.UserDAO;
 import com.cilogi.shiro.persona.PersonaAuthenticationToken;
 import com.cilogi.shiro.persona.PersonaLogin;
 import com.cilogi.util.doc.CreateDoc;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.util.SavedRequest;
 import org.apache.shiro.web.util.WebUtils;
 
@@ -73,9 +75,19 @@ public class LoginServlet extends BaseServlet {
             try {
                 personaLogin.login(personaToken);
                 SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(request);
+                /*
                 String redirectUrl = (savedRequest == null) ? "/index.html" : savedRequest.getRequestUrl();
                 LOG.info("redirect to " + ((savedRequest == null) ? "home" : redirectUrl));
                 response.sendRedirect(response.encodeRedirectURL(redirectUrl));
+                */
+                String redirectUrl = (savedRequest == null) ? null : savedRequest.getRequestUrl();
+                if (redirectUrl != null) {
+                    response.sendRedirect(response.encodeRedirectURL(redirectUrl));
+                }  else {
+                    Subject subject = SecurityUtils.getSubject();
+                    String principal = (String)subject.getPrincipal();
+                    issue("text/plain", HttpServletResponse.SC_OK, "Logged in as " + principal, response);
+                }
             } catch (AuthenticationException e) {
                 LOG.info("Authorization failure: " + e.getMessage());
                 issue(MIME_TEXT_PLAIN, HTTP_STATUS_NOT_FOUND, "cannot authorize token: " + token, response);
