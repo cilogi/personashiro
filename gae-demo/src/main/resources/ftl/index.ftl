@@ -265,10 +265,11 @@
         });
 
         $("#signOut").click(function(e) {
+            e.preventDefault();
             startSpin();
             navigator.id.logout();
             shiro.status.clearStatus();
-            return true;
+            return false;
         });
 
         navigator.id.watch({

@@ -106,5 +106,4 @@ public class LoginServlet extends BaseServlet {
         String html =  create.createDocumentString(templateName, CreateDoc.map(args));
         issue(MIME_TEXT_HTML, HTTP_STATUS_OK, html, response);
     }
-
 }
