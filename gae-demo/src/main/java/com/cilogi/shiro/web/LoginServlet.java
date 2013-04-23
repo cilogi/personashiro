@@ -21,21 +21,18 @@
 
 package com.cilogi.shiro.web;
 
-import com.cilogi.shiro.gae.UserDAO;
 import com.cilogi.shiro.persona.PersonaAuthenticationToken;
 import com.cilogi.shiro.persona.PersonaLogin;
 import com.cilogi.util.doc.CreateDoc;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.subject.Subject;
-import org.apache.shiro.web.filter.authz.HttpMethodPermissionFilter;
 import org.apache.shiro.web.filter.authz.PermissionsAuthorizationFilter;
 import org.apache.shiro.web.util.SavedRequest;
 import org.apache.shiro.web.util.WebUtils;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

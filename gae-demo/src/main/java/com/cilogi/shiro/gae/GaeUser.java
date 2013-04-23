@@ -21,13 +21,11 @@
 
 package com.cilogi.shiro.gae;
 
+import com.cilogi.shiro.persona.IPersonaUser;
 import com.google.common.base.Preconditions;
-import com.googlecode.objectify.annotation.Cache;
-import com.googlecode.objectify.annotation.Entity;
-import com.googlecode.objectify.annotation.Index;
-import com.googlecode.objectify.annotation.Serialize;
+import com.google.common.collect.Sets;
+import com.googlecode.objectify.annotation.*;
 
-import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Date;
@@ -36,10 +34,14 @@ import java.util.Set;
 
 @Cache
 @Entity
-public class GaeUser implements Serializable {
+/**
+ * Minimal user to be stored by AppEngine data store.  Serializable
+ * so that we can use instances in sessions.
+ */
+public class GaeUser implements Serializable, IPersonaUser {
 
     @Id
-    private String name;
+    private String emailAddress;
 
     @Serialize
     private Set<String> roles;
@@ -50,6 +52,8 @@ public class GaeUser implements Serializable {
     @Index
     private Date dateRegistered;
 
+    // this seems to be useful, as the only alternative would be to delete a user,
+    // which would lose all their information...
     private boolean isSuspended;
 
     /** For objectify to create instances on retrieval */
@@ -58,19 +62,18 @@ public class GaeUser implements Serializable {
         this.permissions = new HashSet<String>();
     }
     
-    GaeUser(String name) {
-        this(name, new HashSet<String>(), new HashSet<String>());
+    GaeUser(String emailAddress) {
+        this(emailAddress, Sets.newHashSet("user"), Sets.<String>newHashSet());
     }
-    
 
-    public GaeUser(String name, Set<String> roles, Set<String> permissions) {
-        Preconditions.checkNotNull(name, "User name (email) can't be null");
+    public GaeUser(String emailAddress, Set<String> roles, Set<String> permissions) {
+        Preconditions.checkNotNull(emailAddress, "User email  can't be null");
         Preconditions.checkNotNull(roles, "User roles can't be null");
         Preconditions.checkNotNull(permissions, "User permissions can't be null");
-        this.name = name;
+        this.emailAddress = emailAddress;
 
-        this.roles = Collections.unmodifiableSet(roles);
-        this.permissions = Collections.unmodifiableSet(permissions);
+        this.roles = roles;
+        this.permissions = permissions;
         this.dateRegistered = new Date();
         this.isSuspended = false;
     }
@@ -87,10 +90,12 @@ public class GaeUser implements Serializable {
         return dateRegistered;
     }
 
-    public String getName() {
-        return name;
+    @Override
+    public String getEmailAddress() {
+        return emailAddress;
     }
 
+    @Override
     public synchronized Set<String> getRoles() {
         return Collections.unmodifiableSet(roles);
     }
@@ -100,6 +105,7 @@ public class GaeUser implements Serializable {
         this.roles.addAll(roles);
     }
 
+    @Override
     public synchronized Set<String> getPermissions() {
         return Collections.unmodifiableSet(permissions);
     }
@@ -113,7 +119,7 @@ public class GaeUser implements Serializable {
     public boolean equals(Object o) {
         if (o instanceof GaeUser) {
             GaeUser u = (GaeUser)o;
-            return getName().equals(u.getName());
+            return getEmailAddress().equals(u.getEmailAddress());
         } else {
             return false;
         }
@@ -121,6 +127,6 @@ public class GaeUser implements Serializable {
 
     @Override
     public int hashCode() {
-        return name.hashCode();
+        return emailAddress.hashCode();
     }
 }

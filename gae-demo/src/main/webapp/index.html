@@ -76,7 +76,7 @@ body {
                 <li><a id="admin" class="shiro-user" style="color:red" href="/listUsers.ftl">Admin</a></li>
             </ul>
 <ul class="nav secondary-nav shiro-guest">
-    <li><a id="signIn" href="#"><img src="../images/persona_sign_in_red.png" alt="Sign in with Persona"></a></li>
+    <li><a id="signIn" href="#"><img src="../images/plain_sign_in_red.png" alt="Sign in with Persona"></a></li>
 </ul>
 <ul class="nav secondary-nav shiro-user">
    <li><a id="signOut" href="/logout">Sign Out <span class="shiro-principal"></span></a></li>
@@ -321,6 +321,7 @@ body {
         function stopSpin() {
             if (spin) {
                 spin.stop();
+                spin = null;
             }
         }
 
@@ -385,6 +386,7 @@ body {
               },
               error: function(res, status, xhr) {
                   stopSpin();
+                  navigator.id.logout();
                   alert("login failure" + res);
               }
             });
@@ -403,6 +405,7 @@ body {
               },
               error: function(res, status, xhr) {
                   stopSpin();
+                  navigator.id.logout();
                   alert("logout failure" + res);
               }
             });

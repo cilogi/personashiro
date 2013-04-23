@@ -44,25 +44,23 @@ public class UserSuspendServlet extends BaseServlet {
     private static final String USERNAME = "username";
     private static final String CODE = "code";
 
-    private final Provider<UserDAO> userDAOProvider;
 
     @Inject
-    UserSuspendServlet(Provider<UserDAO> userDAOProvider) {
-        this.userDAOProvider = userDAOProvider;
+    UserSuspendServlet() {
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             String userName = request.getParameter(USERNAME);
-            UserDAO dao = userDAOProvider.get();
-            GaeUser user = dao.findUser(userName);
+            UserDAO dao = new UserDAO();
+            GaeUser user = dao.get(userName);
             if (user != null) {
                 boolean isSuspend = Boolean.parseBoolean(request.getParameter(SUSPEND));
                 boolean isDelete = Boolean.parseBoolean(request.getParameter(DELETE));
                 if (isDelete) {
                     if (isCurrentUserAdmin()) {
-                        dao.deleteUser(user);
+                        dao.delete(user);
                         issueJson(response, HTTP_STATUS_OK,
                                 MESSAGE, "User " + userName + " is deleted");
                     } else {
@@ -72,7 +70,7 @@ public class UserSuspendServlet extends BaseServlet {
                 } else {
                     if (isCurrentUserAdmin()) {
                         user.setSuspended(isSuspend);
-                        dao.saveUser(user, false);
+                        dao.save(user, false);
                         issueJson(response, HTTP_STATUS_OK,
                                 MESSAGE, isSuspend
                                         ? "User " + userName + " is suspended"

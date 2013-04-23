@@ -20,7 +20,7 @@
 
 package com.cilogi.shiro.microdemo;
 
-import com.cilogi.shiro.persona.AbstractPersonaRealm;
+import com.cilogi.shiro.persona.PersonaRealm;
 import com.cilogi.shiro.persona.DefaultPersonaUserDAO;
 
 /**
@@ -28,7 +28,7 @@ import com.cilogi.shiro.persona.DefaultPersonaUserDAO;
  * store user names, properties, permissions, etc.  In practice
  * one would record information about the users one has seen.
  */
-public class MicroPersonaRealm  extends AbstractPersonaRealm {
+public class MicroPersonaRealm  extends PersonaRealm {
 
     public MicroPersonaRealm() {
         super(new DefaultPersonaUserDAO(), null);

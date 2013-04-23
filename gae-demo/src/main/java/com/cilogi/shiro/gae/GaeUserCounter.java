@@ -22,11 +22,9 @@
 package com.cilogi.shiro.gae;
 
 import com.googlecode.objectify.annotation.Cache;
-import com.googlecode.objectify.annotation.Cached;
 import com.googlecode.objectify.annotation.Entity;
-import com.googlecode.objectify.annotation.Unindexed;
+import com.googlecode.objectify.annotation.Id;
 
-import javax.persistence.Id;
 import java.util.Date;
 import java.util.logging.Logger;
 

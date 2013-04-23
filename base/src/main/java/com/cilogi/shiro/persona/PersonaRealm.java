@@ -1,6 +1,6 @@
 // Copyright (c) 2012 Tim Niblett. All Rights Reserved.
 //
-// File:        AbstractPersonaRealm.java  (10-Oct-2012)
+// File:        PersonaRealm.java  (10-Oct-2012)
 // Author:      tim
 //
 // Copyright in the whole and every part of this source file belongs to
@@ -31,11 +31,11 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 
 
-public abstract class AbstractPersonaRealm extends AuthorizingRealm {
+public class PersonaRealm extends AuthorizingRealm {
 
     private final IPersonaUserDAO personaUserDAO;
 
-    protected AbstractPersonaRealm(IPersonaUserDAO personaUserDAO, CacheManager cacheManager) {
+    protected PersonaRealm(IPersonaUserDAO personaUserDAO, CacheManager cacheManager) {
         super(cacheManager, new PersonaCredentialsMatcher());
         this.personaUserDAO = personaUserDAO;
         setAuthenticationTokenClass(PersonaAuthenticationToken.class);

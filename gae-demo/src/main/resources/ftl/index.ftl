@@ -294,6 +294,7 @@
               },
               error: function(res, status, xhr) {
                   stopSpin();
+                  navigator.id.logout();
                   alert("login failure" + res);
               }
             });
@@ -312,6 +313,7 @@
               },
               error: function(res, status, xhr) {
                   stopSpin();
+                  navigator.id.logout();
                   alert("logout failure" + res);
               }
             });

@@ -25,7 +25,6 @@ import com.cilogi.shiro.gae.GaeUser;
 import com.cilogi.shiro.gae.UserDAO;
 import com.google.appengine.api.datastore.QueryResultIterable;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,6 +41,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
+
+import static com.googlecode.objectify.ObjectifyService.ofy;
 
 @Singleton
 public class UserListServlet extends BaseServlet {
@@ -90,15 +91,15 @@ public class UserListServlet extends BaseServlet {
         int index = 0;
         for (GaeUser user : users) {
             JSONArray arr = new JSONArray();
-            arr.put(user.getName());
+            arr.put(user.getEmailAddress());
             arr.put(dateFrom(user.getDateRegistered()));
             arr.put(set2string(user.getRoles()));
             arr.put(String.format("<input data-start=\"%d\" data-length=\"%d\" type=\"checkbox\" name=\"%s\" %s>",
                     start, length,
-                    user.getName(), user.isSuspended() ? "checked" : ""));
+                    user.getEmailAddress(), user.isSuspended() ? "checked" : ""));
             arr.put(String.format("<input data-start=\"%d\" data-length=\"%d\" data-index=\"%d\" type=\"button\" name=\"%s\" value=\"delete\">",
                     start, length, index,
-                    user.getName()));
+                    user.getEmailAddress()));
             array.put(arr);
             index++;
         }
@@ -108,17 +109,13 @@ public class UserListServlet extends BaseServlet {
 
     private List<GaeUser> users(UserDAO dao, String sSearch, int start, int length) {
         if (sSearch != null && !"".equals(sSearch)) {
-            return Lists.newArrayList(dao.findUser(sSearch));
+            return Lists.newArrayList(dao.get(sSearch));
         } else {
-            List<GaeUser> list =  Lists.newLinkedList();
-            QueryResultIterable<GaeUser> query = dao.ofy().query(GaeUser.class)
+            List<GaeUser> list = ofy().load().type(GaeUser.class)
                     .order("-dateRegistered")
                     .offset(start)
                     .limit(length)
-                    .fetch();
-            for (GaeUser aQuery : query) {
-                list.add(aQuery);
-            }
+                    .list();
             LOG.info("Fresh load start " + start + " # " + length);
             return list;
         }

@@ -15,8 +15,6 @@
 
 <script>
     $(document).ready(function() {
-        navigator.id.request();
-
         navigator.id.watch({
           onlogin: function(assertion) {
             $.postGo("", {
@@ -27,6 +25,7 @@
              shiro.status.clearStatus();
           }
         });
+        navigator.id.request();
     });
 </script>
 </html>

@@ -22,76 +22,61 @@
 package com.cilogi.shiro.gae;
 
 
+import com.cilogi.shiro.persona.IPersonaUserDAO;
+import com.google.common.base.Preconditions;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
-import com.googlecode.objectify.util.DAOBase;
-import org.apache.shiro.cache.Cache;
+import com.googlecode.objectify.VoidWork;
 
-import java.util.Date;
+import java.util.Set;
 import java.util.logging.Logger;
 
-public class UserDAO extends DAOBase {
+import static com.googlecode.objectify.ObjectifyService.ofy;
+
+
+public class UserDAO implements IPersonaUserDAO {
     static final Logger LOG = Logger.getLogger(UserDAO.class.getName());
     
-    private static final long REGISTRATION_VALID_DAYS = 1;
-
-    private final Cache<String, GaeUser> userCache;
 
     static {
         ObjectifyService.register(GaeUser.class);
         ObjectifyService.register(GaeUserCounter.class);
     }
 
-    public UserDAO() {
-        userCache = new MemcacheManager().getCache("GaeUser");
+    public UserDAO() {}
+
+    @Override
+    public GaeUser get(String emailAddress) {
+        Preconditions.checkNotNull(emailAddress, "Email address can't be null");
+        GaeUser db = ofy().load().key(Key.create(GaeUser.class, emailAddress)).get();
+        return db;
+
     }
 
-    /**
-     * Save user with authorization information
-     * @param user  User
-     * @param changeCount should the user count be incremented
-     * @return the user, after changes
-     */
-    public GaeUser saveUser(GaeUser user, boolean changeCount) {
-        ofy().put(user);
-        userCache.remove(user.getName());
-        if (changeCount) {
+    @Override
+    public GaeUser create(String emailAddress, Set<String> roles, Set<String> permissions) {
+        GaeUser user = new GaeUser(emailAddress, roles, permissions);
+        save(user, true);
+        return user;
+    }
+
+    public GaeUser save(GaeUser user, boolean isChangeCount) {
+        ofy().save().entity(user).now();
+        if (isChangeCount) {
             changeCount(1L);
         }
         return user;
     }
 
-    public GaeUser deleteUser(GaeUser user) {
-        ofy().delete(user);
-        userCache.remove(user.getName());
+    public GaeUser delete(GaeUser user) {
+        ofy().delete().keys(Key.create(GaeUser.class, user.getEmailAddress()));
         changeCount(-1L);
         return user;
     }
 
-    public GaeUser findUser(String userName) {
-        try {
-            GaeUser user = userCache.get(userName);
-            if (user == null) {
-                user = ofy().find(new Key<GaeUser>(GaeUser.class, userName));
-                if (user != null) {
-                    userCache.put(userName, user);
-                }
-            }
-            return user;
-        } catch (NullPointerException _) {
-            return null;
-        }
-    }
-
-
     public long getCount() {
-        GaeUserCounter count = ofy().find(GaeUserCounter.class, GaeUserCounter.COUNTER_ID);
+        GaeUserCounter count = getCounter();
         return (count == null) ? 0 : count.getCount();
-    }
-
-    public Date getCountLastModified() {
-        GaeUserCounter count = ofy().find(GaeUserCounter.class, GaeUserCounter.COUNTER_ID);
-        return (count == null) ? new Date(0L) : count.getLastModified();
     }
 
     /**
@@ -100,16 +85,20 @@ public class UserDAO extends DAOBase {
      * @param delta amount to change
      */
     private void changeCount(final long delta) {
-        TransactDAO.repeatInTransaction(new TransactDAO.Transactable() {
-            @Override
-            public void run(TransactDAO transactDAO) {
-                GaeUserCounter count = transactDAO.ofy().find(GaeUserCounter.class, GaeUserCounter.COUNTER_ID);
-                if (count == null) {
-                    count = new GaeUserCounter();
+        ofy().transact(new VoidWork() {
+            public void vrun() {
+                GaeUserCounter counter = getCounter();
+                if (counter == null) {
+                    counter = new GaeUserCounter();
                 }
-                count.delta(delta);
-                transactDAO.ofy().put(count);
+                counter.delta(delta);
+                ofy().save().entity(counter);
             }
         });
     }
+
+    private static GaeUserCounter getCounter() {
+        return ofy().load().key(Key.create(GaeUserCounter.class, GaeUserCounter.COUNTER_ID)).get();
+    }
+
 }

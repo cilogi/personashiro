@@ -28,7 +28,7 @@ import junit.framework.TestCase;
 import java.util.logging.Logger;
 
 
-public class TestUserDAO extends TestCase {
+public class TestUserDAO  extends TestCase {
     static final Logger LOG = Logger.getLogger(TestUserDAO.class.getName());
 
     private final LocalServiceTestHelper helper =
@@ -50,9 +50,9 @@ public class TestUserDAO extends TestCase {
 
     public void testBase() {
         UserDAO dao = new UserDAO();
-        GaeUser user = new GaeUser("tim");
-        dao.saveUser(user, true);
-        GaeUser back = dao.findUser("tim");
+        GaeUser user = new GaeUser("fred.flintstone@quarry.com");
+        dao.save(user, true);
+        GaeUser back = dao.get("fred.flintstone@quarry.com");
         assertEquals(user, back);
         assertEquals(1, dao.getCount());
     }

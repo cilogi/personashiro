@@ -23,9 +23,7 @@ package com.cilogi.shiro.persona;
 import java.util.Set;
 
 /**
- * Interface between Persona transactions and your user database. We use the
- * term principal throughout, following Shiro, but its always an Email address
- * for Persona.
+ * Interface between Persona transactions and your user database.
  * <p>See the DefaultPersonaUserDAO for the do-nothing option.
  */
 public interface IPersonaUserDAO {

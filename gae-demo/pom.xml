@@ -23,10 +23,6 @@
             <layout>default</layout>
         </repository>
         <repository>
-            <id>objectify-appengine</id>
-            <url>http://objectify-appengine.googlecode.com/svn/maven</url>
-        </repository>
-        <repository>
             <id>spy</id>
             <name>Spy Repository</name>
             <layout>default</layout>
@@ -55,9 +51,7 @@
     <!-- Specify hard-coded project properties here -->
     <properties>
         <downloadSources>true</downloadSources>
-        <gae.version>1.6.4</gae.version>
-        <appengine.sdk.root>C:/software/appengine-java-sdk-1.6.4</appengine.sdk.root>
-        <gae.application.version>test</gae.application.version>
+        <appengine.target.version>1.7.6</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -65,33 +59,8 @@
         <dependency>
             <groupId>com.cilogi.shiro</groupId>
             <artifactId>persona-shiro</artifactId>
-            <version>${version}</version>
+            <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>net.kindleit</groupId>
-            <artifactId>gae-runtime</artifactId>
-            <version>${gae.version}</version>
-            <type>pom</type>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.jdo</groupId>
-                    <artifactId>jdo2-api</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.datanucleus</groupId>
-                    <artifactId>datanucleus-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.datanucleus</groupId>
-                    <artifactId>datanucleus-jpa</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.google.appengine.orm</groupId>
-                    <artifactId>datanucleus-appengine</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
 
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
@@ -128,7 +97,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.5</version>
+            <version>4.11</version>
             <scope>test</scope>
         </dependency>
 
@@ -138,21 +107,19 @@
           -->
         <dependency>
             <groupId>com.google.appengine</groupId>
-            <artifactId>appengine-api-labs</artifactId>
-            <version>${gae.version}</version>
+            <artifactId>appengine-api-1.0-sdk</artifactId>
+            <version>${appengine.target.version}</version>
         </dependency>
-
         <dependency>
             <groupId>com.google.appengine</groupId>
             <artifactId>appengine-api-stubs</artifactId>
-            <version>${gae.version}</version>
+            <version>${appengine.target.version}</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>com.google.appengine</groupId>
             <artifactId>appengine-testing</artifactId>
-            <version>${gae.version}</version>
+            <version>${appengine.target.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -231,27 +198,6 @@
                     <!--
                     <archiveClasses>true</archiveClasses>
                     -->
-                    <warSourceDirectory>${basedir}/src/main/web</warSourceDirectory>
-                    <packagingExcludes>WEB-INF/web.xml</packagingExcludes>
-                    <webResources>
-                        <resource>
-                            <directory>src/main/web</directory>
-                            <filtering>true</filtering>
-                            <includes>
-                                <include>*.html</include>
-                                <include>*.properties</include>
-                                <include>cache.manifest</include>
-                                <include>favicon.ico</include>
-                                <include>**/*.xml</include>
-                                <include>**/*.tld</include>
-                                <include>**/*.ini</include>
-                                <include>css/**</include>
-                                <include>js/**</include>
-                                <include>images/**</include>
-                                <include>assets/**</include>
-                            </includes>
-                        </resource>
-                    </webResources>
                 </configuration>
             </plugin>
 
@@ -260,51 +206,21 @@
                 gae:deploy" to upload to GAE.
             -->
             <plugin>
-                <groupId>net.kindleit</groupId>
-                <artifactId>maven-gae-plugin</artifactId>
-                <version>0.7.1</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>net.kindleit</groupId>
-                        <artifactId>gae-runtime</artifactId>
-                        <version>${gae.version}</version>
-                        <type>pom</type>
-                    </dependency>
-                </dependencies>
+                <groupId>com.google.appengine</groupId>
+                <artifactId>appengine-maven-plugin</artifactId>
+                <version>${appengine.target.version}</version>
                 <configuration>
-                    <serverId>appengine.google.com</serverId>
-                    <sdkDir>${appengine.sdk.root}</sdkDir>
-                    <appDir>${basedir}/target/${artifactId}-${version}</appDir>
-                </configuration>
-
-            </plugin>
-
-            <!--
-                Upload application to the appspot automatically, during
-                release:perform
-            -->
-            <plugin>
-                <artifactId>maven-release-plugin</artifactId>
-                <configuration>
-                    <goals>gae:deploy</goals>
+                    <address>0.0.0.0</address>
                 </configuration>
             </plugin>
 
-            <!-- Java compiler version -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.0</version>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                </configuration>
-            </plugin>
+
+
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>2.1.2</version>
+                <version>2.2.1</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -339,7 +255,7 @@
                 </dependencies>
                 <configuration>
                     <cfgFile>src/main/resources/fmpp/config.fmpp</cfgFile>
-                    <outputDirectory>${basedir}/src/main/web</outputDirectory>
+                    <outputDirectory>${basedir}/src/main/webapp</outputDirectory>
                     <!--
                     <outputDirectory>${project.build.directory}/${project.name}-${project.version}</outputDirectory>
                     -->
@@ -436,6 +352,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jdepend-maven-plugin</artifactId>
+                <version>2.0-beta-2</version>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

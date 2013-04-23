@@ -1,10 +1,10 @@
-// Copyright (c) 2012 Tim Niblett. All Rights Reserved.
+// Copyright (c) 2013 Cilogi. All Rights Reserved.
 //
-// File:        OAuthRealm.java  (07-Oct-2012)
+// File:        GaePersonaRealm.java  (23/04/13)
 // Author:      tim
 //
 // Copyright in the whole and every part of this source file belongs to
-// Tim Niblett (the Author) and may not be used, sold, licenced, 
+// Cilogi (the Author) and may not be used, sold, licenced, 
 // transferred, copied or reproduced in whole or in part in 
 // any manner or form or in or on any media to any person other than 
 // in accordance with the terms of The Author's agreement
@@ -20,19 +20,15 @@
 
 package com.cilogi.shiro.gae;
 
-import com.cilogi.shiro.persona.AbstractPersonaRealm;
+import com.cilogi.shiro.persona.PersonaRealm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.inject.Provider;
 
-public class GaePersonaRealm extends AbstractPersonaRealm {
+public class GaePersonaRealm extends PersonaRealm {
+    static final Logger LOG = LoggerFactory.getLogger(GaePersonaRealm.class);
 
     public GaePersonaRealm() {
-        super(new GaePersonaUserDAO(new MyProvider()), new MemcacheManager());
-    }
-
-    private static class MyProvider implements Provider<UserDAO> {
-        public UserDAO get() {
-            return UserDAOProvider.get();
-        }
+        super(new UserDAO(), new MemcacheManager());
     }
 }

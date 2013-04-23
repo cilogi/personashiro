@@ -21,9 +21,8 @@
 
 package com.cilogi.shiro.guice;
 
-import com.cilogi.shiro.gae.GaePersonaUserDAO;
+
 import com.cilogi.shiro.gae.UserDAO;
-import com.cilogi.shiro.gae.UserDAOProvider;
 import com.cilogi.shiro.persona.IPersonaUserDAO;
 import com.cilogi.util.doc.CreateDoc;
 import com.google.appengine.api.utils.SystemProperty;
@@ -31,7 +30,6 @@ import com.google.appengine.tools.appstats.AppstatsFilter;
 import com.google.appengine.tools.appstats.AppstatsServlet;
 import com.google.common.base.Charsets;
 import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.name.Names;
 import com.googlecode.objectify.cache.AsyncCacheFilter;
@@ -62,7 +60,7 @@ public class ServeLogic extends AbstractModule {
         bind(AppstatsServlet.class).in(Scopes.SINGLETON);
         bind(AppstatsFilter.class).in(Scopes.SINGLETON);
         bind(AsyncCacheFilter.class).in(Scopes.SINGLETON);// needed to sync the datastore if its running async
-        bind(IPersonaUserDAO.class).to(GaePersonaUserDAO.class).in(Scopes.SINGLETON);
+        bind(IPersonaUserDAO.class).to(UserDAO.class).in(Scopes.SINGLETON);
         bindString("tim", "tim");
         bindString("email.from", "admin@personashiro.appspotmail.com");
         bindString("userBaseUrl", userBaseUrl);
@@ -86,11 +84,6 @@ public class ServeLogic extends AbstractModule {
         } catch (TemplateModelException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @Provides
-    public UserDAO provideUserDAO() {
-        return UserDAOProvider.get();
     }
 
     private static boolean isDevelopmentServer() {
