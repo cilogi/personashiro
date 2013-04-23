@@ -1,6 +1,6 @@
 // Copyright (c) 2011 Tim Niblett All Rights Reserved.
 //
-// File:        TestUserDAO.java  (02-Nov-2011)
+// File:        TestMemcache.java  (26-Oct-2011)
 // Author:      tim
 
 //
@@ -21,20 +21,19 @@
 
 package com.cilogi.shiro.gae;
 
-import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
+import com.google.appengine.tools.development.testing.LocalMemcacheServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import junit.framework.TestCase;
 
 import java.util.logging.Logger;
 
-
-public class TestUserDAO  extends TestCase {
-    static final Logger LOG = Logger.getLogger(TestUserDAO.class.getName());
+public class TestMemcache extends TestCase {
+    static final Logger LOG = Logger.getLogger(TestMemcache.class.getName());
 
     private final LocalServiceTestHelper helper =
-        new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
+        new LocalServiceTestHelper(new LocalMemcacheServiceTestConfig());
 
-    public TestUserDAO(String nm) {
+    public TestMemcache(String nm) {
         super(nm);
     }
 
@@ -48,12 +47,15 @@ public class TestUserDAO  extends TestCase {
         helper.tearDown();
     }
 
-    public void testBase() {
-        UserDAO dao = new UserDAO();
-        GaeUser user = new GaeUser("fred.flintstone@quarry.com");
-        dao.save(user);
-        GaeUser back = dao.get("fred.flintstone@quarry.com");
-        assertEquals(user, back);
-    }
+    public void testPutThenGet() {
+        Memcache<String,String> cacheCars = new Memcache<String,String>("cars");
+        Memcache<String,String> cachePlanes = new Memcache<String,String>("planes");
 
+        cacheCars.putSync("audi", "a4");
+        assertEquals("a4", cacheCars.get("audi"));
+
+        cachePlanes.put("audi", "a4-flies");
+        assertEquals("a4-flies", cachePlanes.get("audi"));
+        assertEquals("a4", cacheCars.get("audi"));
+    }
 }

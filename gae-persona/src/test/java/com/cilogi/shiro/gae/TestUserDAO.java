@@ -27,7 +27,6 @@ import junit.framework.TestCase;
 
 import java.util.logging.Logger;
 
-
 public class TestUserDAO  extends TestCase {
     static final Logger LOG = Logger.getLogger(TestUserDAO.class.getName());
 

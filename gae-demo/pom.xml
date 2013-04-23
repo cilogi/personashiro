@@ -58,7 +58,7 @@
     <dependencies>
         <dependency>
             <groupId>com.cilogi.shiro</groupId>
-            <artifactId>persona-shiro</artifactId>
+            <artifactId>gae-persona</artifactId>
             <version>${project.version}</version>
         </dependency>
 

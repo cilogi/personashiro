@@ -60,7 +60,8 @@ public class ServeLogic extends AbstractModule {
         bind(AppstatsServlet.class).in(Scopes.SINGLETON);
         bind(AppstatsFilter.class).in(Scopes.SINGLETON);
         bind(AsyncCacheFilter.class).in(Scopes.SINGLETON);// needed to sync the datastore if its running async
-        bind(IPersonaUserDAO.class).to(UserDAO.class).in(Scopes.SINGLETON);
+        bind(IPersonaUserDAO.class).to(UserDAO.class);
+        bind(UserDAO.class).in(Scopes.SINGLETON);
         bindString("tim", "tim");
         bindString("email.from", "admin@personashiro.appspotmail.com");
         bindString("userBaseUrl", userBaseUrl);

@@ -22,6 +22,7 @@
 package com.cilogi.shiro.web;
 
 import com.cilogi.shiro.gae.GaeUser;
+import com.cilogi.shiro.gae.UserCounterDAO;
 import com.cilogi.shiro.gae.UserDAO;
 import com.google.appengine.api.datastore.QueryResultIterable;
 import com.google.common.collect.Lists;
@@ -54,11 +55,11 @@ public class UserListServlet extends BaseServlet {
     private static final String DATATABLE_LENGTH = "iDisplayLength";
     private static final String DATATABLE_SEARCH = "sSearch";
 
-    private final Provider<UserDAO> userDAOProvider;
+    private final UserDAO userDAO;
 
     @Inject
-    UserListServlet(Provider<UserDAO> userDAOProvider) {
-        this.userDAOProvider = userDAOProvider;
+    UserListServlet(UserDAO userDAO) {
+        this.userDAO = userDAO;
     }
 
 
@@ -79,14 +80,13 @@ public class UserListServlet extends BaseServlet {
 
     private void doOutput(HttpServletResponse response, String sSearch, int start, int length, String echo)
             throws JSONException, IOException {
-        UserDAO dao = userDAOProvider.get();
-        long nUsers = dao.getCount();
+        long nUsers = new UserCounterDAO().getCount();
         JSONObject obj = new JSONObject();
         obj.put("iTotalRecords", nUsers);
         obj.put("iTotalDisplayRecords", nUsers);
         obj.put("sEcho", echo);
 
-        List<GaeUser> users = users(dao, sSearch, start, length);
+        List<GaeUser> users = users(userDAO, sSearch, start, length);
         JSONArray array = new JSONArray();
         int index = 0;
         for (GaeUser user : users) {
