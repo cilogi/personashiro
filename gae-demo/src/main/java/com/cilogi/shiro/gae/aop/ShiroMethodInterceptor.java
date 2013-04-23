@@ -19,7 +19,7 @@
 //
 
 
-package com.cilogi.shiro.aop;
+package com.cilogi.shiro.gae.aop;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;

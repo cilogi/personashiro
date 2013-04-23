@@ -19,7 +19,7 @@
 //
 
 
-package com.cilogi.shiro.aop;
+package com.cilogi.shiro.gae.aop;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.matcher.Matchers;
