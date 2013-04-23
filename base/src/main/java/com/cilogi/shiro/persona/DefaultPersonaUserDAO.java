@@ -33,22 +33,13 @@ public class DefaultPersonaUserDAO implements IPersonaUserDAO {
 
     }
 
-    public void newUserIfNotExists(String principal) {
-        // do nothing
+    @Override
+    public DefaultPersonaUser get(String emailAddress) {
+        return null;
     }
 
-    public boolean isUserExistsAndInGoodStanding(String principal) {
-        return true;
+    @Override
+    public DefaultPersonaUser create(String emailAddress, Set<String> roles, Set<String> permissions) {
+        return new DefaultPersonaUser(emailAddress, roles, permissions);
     }
-
-    public Set<String> userRoles(String principal) {
-        HashSet<String> set =  new HashSet<String>();
-        set.add("user");
-        return set;
-    }
-
-    public Set<String> userPermissions(String principal) {
-        return new HashSet<String>();
-    }
-
 }

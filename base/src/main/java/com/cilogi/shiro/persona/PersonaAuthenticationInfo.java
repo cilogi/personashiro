@@ -34,11 +34,11 @@ public class PersonaAuthenticationInfo implements AuthenticationInfo {
     public final String authToken;
     private final String principal;
 
-    public PersonaAuthenticationInfo(String authToken, String principal) {
+    public PersonaAuthenticationInfo(String authToken, String emailAddress) {
         Preconditions.checkNotNull(authToken, "Persona authentication info can't have null token");
-        Preconditions.checkNotNull(principal, "Persona authentication info can't have null principal");
+        Preconditions.checkNotNull(emailAddress, "Persona authentication info can't have null principal");
         this.authToken = authToken;
-        this.principal = principal;
+        this.principal = emailAddress;
     }
 
     @Override

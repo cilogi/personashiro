@@ -21,7 +21,9 @@
 
 package com.cilogi.shiro.gae;
 
+import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Cached;
+import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Unindexed;
 
 import javax.persistence.Id;
@@ -36,8 +38,8 @@ import java.util.logging.Logger;
  * <p> This counter should be changed relatively rarely (less than once a second)
  * so doesn't need to be sharded.
  */
-@Cached
-@Unindexed
+@Cache
+@Entity
 class GaeUserCounter {
     static final Logger LOG = Logger.getLogger(GaeUserCounter.class.getName());
 

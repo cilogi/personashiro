@@ -22,6 +22,7 @@ package com.cilogi.shiro.persona;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
@@ -69,7 +70,10 @@ public class PersonaLogin {
         Preconditions.checkArgument(token.isValid(), "Token must be valid to allow user creation");
 
         String principal = (String)token.getPrincipal();
-        userDAO.newUserIfNotExists(principal);
+        IPersonaUser user = userDAO.get(principal);
+        if (user == null) {
+            userDAO.create(principal, Sets.newHashSet("user"), Sets.<String>newHashSet());
+        }
     }
 
     private Map<Object,Object> sessionAttributes(Session session) {

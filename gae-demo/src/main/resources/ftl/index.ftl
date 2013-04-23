@@ -229,6 +229,7 @@
         function stopSpin() {
             if (spin) {
                 spin.stop();
+                spin = null;
             }
         }
 

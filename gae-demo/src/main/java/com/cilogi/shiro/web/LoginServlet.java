@@ -28,6 +28,8 @@ import com.cilogi.util.doc.CreateDoc;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.filter.authz.HttpMethodPermissionFilter;
+import org.apache.shiro.web.filter.authz.PermissionsAuthorizationFilter;
 import org.apache.shiro.web.util.SavedRequest;
 import org.apache.shiro.web.util.WebUtils;
 
@@ -103,6 +105,7 @@ public class LoginServlet extends BaseServlet {
     }
 
     private void showView(HttpServletResponse response, String templateName, Object... args) throws IOException {
+        PermissionsAuthorizationFilter filter;
         String html =  create.createDocumentString(templateName, CreateDoc.map(args));
         issue(MIME_TEXT_HTML, HTTP_STATUS_OK, html, response);
     }

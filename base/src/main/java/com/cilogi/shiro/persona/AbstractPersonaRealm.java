@@ -57,9 +57,10 @@ public abstract class AbstractPersonaRealm extends AuthorizingRealm {
         if (principal == null) {
             throw new NullPointerException("Can't find a principal in the collection");
         }
-        if (personaUserDAO.isUserExistsAndInGoodStanding(principal)) {
-            SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(personaUserDAO.userRoles(principal));
-            info.setStringPermissions(personaUserDAO.userPermissions(principal));
+        IPersonaUser user = personaUserDAO.get(principal);
+        if (user != null) {
+            SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(user.getRoles());
+            info.setStringPermissions(user.getPermissions());
             return info;
         } else {
             return null;

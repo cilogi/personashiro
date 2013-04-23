@@ -33,7 +33,7 @@ public class PersonaAuthenticationToken implements HostAuthenticationToken, Reme
     private final String token;
     private String principal;
     private final String host;
-   private final boolean isRememberMe;
+    private final boolean isRememberMe;
 
     public PersonaAuthenticationToken(String token, String host, boolean isRememberMe) {
         Preconditions.checkNotNull(token, "You have to have a Persona token to create an authentication token");

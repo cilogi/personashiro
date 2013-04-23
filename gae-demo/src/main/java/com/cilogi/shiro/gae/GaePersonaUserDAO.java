@@ -25,6 +25,7 @@ import com.google.common.collect.Sets;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import java.util.Collections;
 import java.util.Set;
 
 public class GaePersonaUserDAO implements IPersonaUserDAO {
@@ -37,36 +38,36 @@ public class GaePersonaUserDAO implements IPersonaUserDAO {
     }
 
     @Override
-    public void newUserIfNotExists(String principal ) {
-        GaeUser user = (principal == null) ? null : dao().findUser(principal);
+    public void newUser(String emailAddress) {
+        GaeUser user = (emailAddress == null) ? null : dao().findUser(emailAddress);
         if (user == null) {
-            user = new GaeUser(principal, Sets.newHashSet("user"), Sets.<String>newHashSet());
+            user = new GaeUser(emailAddress, Sets.newHashSet("user"), Sets.<String>newHashSet());
             dao().saveUser(user, true);
         }
     }
 
     @Override
-    public boolean isUserExistsAndInGoodStanding(String principal) {
-        GaeUser user = dao().findUser(principal);
+    public boolean userExists(String emailAddress) {
+        GaeUser user = dao().findUser(emailAddress);
         return !(user == null || user.isSuspended());
     }
 
     @Override
-    public Set<String> userRoles(String principal) {
-        GaeUser user = dao().findUser(principal);
+    public Set<String> userRoles(String emailAddress) {
+        GaeUser user = dao().findUser(emailAddress);
         if (user == null || user.isSuspended()) {
             return Sets.newHashSet();
         }
-        return user.getRoles();
+        return Collections.unmodifiableSet(user.getRoles());
     }
 
     @Override
-    public Set<String> userPermissions(String principal) {
-        GaeUser user = dao().findUser(principal);
+    public Set<String> userPermissions(String emailAddress) {
+        GaeUser user = dao().findUser(emailAddress);
         if (user == null || user.isSuspended()) {
             return Sets.newHashSet();
         }
-        return user.getPermissions();
+        return Collections.unmodifiableSet(user.getPermissions());
     }
 
     private UserDAO dao() {

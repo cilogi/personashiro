@@ -22,6 +22,7 @@ package com.cilogi.shiro.persona;
 
 import com.google.common.base.Charsets;
 import com.google.common.collect.Maps;
+import com.google.common.io.ByteStreams;
 import org.json.JSONObject;
 
 import java.io.*;
@@ -71,15 +72,6 @@ class PersonaVerifier {
         }
     }
 
-    /*
-    static String postURLGae(URL url) throws IOException {
-        URLFetchService service = URLFetchServiceFactory.getURLFetchService();
-        HTTPRequest request = new HTTPRequest(url, HTTPMethod.POST);
-        HTTPResponse response = service.fetch(request);
-        String s = new String(response.getContent(), Charsets.UTF_8);
-    }
-    */
-
     static String postURL(URL url) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setDoOutput(true);
@@ -101,16 +93,6 @@ class PersonaVerifier {
     }
 
     static byte[] copyStream(InputStream in) throws IOException {
-        final int BUFSZ = 4096;
-        ByteArrayOutputStream out = new ByteArrayOutputStream(BUFSZ * 20);
-        byte[] buf = new byte[BUFSZ];
-        int nRead;
-        while ((nRead = in.read(buf)) != -1) {
-            out.write(buf, 0, nRead);
-        }
-        out.flush();
-        byte[] ret = out.toByteArray();
-        out.close();
-        return ret;
+        return ByteStreams.toByteArray(in);
     }
 }

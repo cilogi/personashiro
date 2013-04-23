@@ -22,9 +22,10 @@
 package com.cilogi.shiro.gae;
 
 import com.google.common.base.Preconditions;
-import com.googlecode.objectify.annotation.Cached;
-import com.googlecode.objectify.annotation.Indexed;
-import com.googlecode.objectify.annotation.Unindexed;
+import com.googlecode.objectify.annotation.Cache;
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Index;
+import com.googlecode.objectify.annotation.Serialize;
 
 import javax.persistence.Id;
 import java.io.Serializable;
@@ -33,18 +34,20 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-@Cached
-@Unindexed
+@Cache
+@Entity
 public class GaeUser implements Serializable {
 
     @Id
     private String name;
 
+    @Serialize
     private Set<String> roles;
 
+    @Serialize
     private Set<String> permissions;
 
-    @Indexed
+    @Index
     private Date dateRegistered;
 
     private boolean isSuspended;
