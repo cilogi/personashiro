@@ -26,21 +26,17 @@ import com.cilogi.shiro.persona.IPersonaUserDAO;
 import com.google.common.base.Preconditions;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.ObjectifyService;
-import com.googlecode.objectify.VoidWork;
 
 import java.util.Set;
-import java.util.logging.Logger;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 
 public class UserDAO implements IPersonaUserDAO {
-    static final Logger LOG = Logger.getLogger(UserDAO.class.getName());
-    
+
 
     static {
         ObjectifyService.register(GaeUser.class);
-        ObjectifyService.register(GaeUserCounter.class);
     }
 
     public UserDAO() {}
@@ -56,49 +52,27 @@ public class UserDAO implements IPersonaUserDAO {
     @Override
     public GaeUser create(String emailAddress, Set<String> roles, Set<String> permissions) {
         GaeUser user = new GaeUser(emailAddress, roles, permissions);
-        save(user, true);
+        save(user);
+        new UserCounterDAO().inc(1);
         return user;
     }
 
-    public GaeUser save(GaeUser user, boolean isChangeCount) {
+    /**
+     * Save a user.  Its assumed that the user isn't currently in the database, otherwise
+     * the counts will be off
+     * @param user  the user to save
+     * @return  A pointer to the user, for chaining.
+     */
+    public GaeUser save(GaeUser user) {
+        Preconditions.checkNotNull(user, "User can't be null");
         ofy().save().entity(user).now();
-        if (isChangeCount) {
-            changeCount(1L);
-        }
         return user;
     }
 
     public GaeUser delete(GaeUser user) {
+        Preconditions.checkNotNull(user, "User can't be null");
         ofy().delete().keys(Key.create(GaeUser.class, user.getEmailAddress()));
-        changeCount(-1L);
+        new UserCounterDAO().inc(-1);
         return user;
     }
-
-    public long getCount() {
-        GaeUserCounter count = getCounter();
-        return (count == null) ? 0 : count.getCount();
-    }
-
-    /**
-     * Change the user count.  Wrapped in a transaction to make sure the
-     * count is accurate.
-     * @param delta amount to change
-     */
-    private void changeCount(final long delta) {
-        ofy().transact(new VoidWork() {
-            public void vrun() {
-                GaeUserCounter counter = getCounter();
-                if (counter == null) {
-                    counter = new GaeUserCounter();
-                }
-                counter.delta(delta);
-                ofy().save().entity(counter);
-            }
-        });
-    }
-
-    private static GaeUserCounter getCounter() {
-        return ofy().load().key(Key.create(GaeUserCounter.class, GaeUserCounter.COUNTER_ID)).get();
-    }
-
 }

@@ -27,7 +27,9 @@ import org.aopalliance.intercept.MethodInvocation;
 import java.lang.reflect.Method;
 import java.util.logging.Logger;
 
-
+/**
+ * Make Shiro AOP compatible with Guice, which uses the AOPAlliance interface
+ */
 public class ShiroMethodInterceptor implements MethodInterceptor {
     static final Logger LOG = Logger.getLogger(ShiroMethodInterceptor.class.getName());
 

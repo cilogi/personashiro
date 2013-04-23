@@ -1,6 +1,6 @@
 // Copyright (c) 2011 Tim Niblett All Rights Reserved.
 //
-// File:        GaeUserCounter.java  (11-Nov-2011)
+// File:        UserCounter.java  (11-Nov-2011)
 // Author:      tim
 
 //
@@ -25,7 +25,6 @@ import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 
-import java.util.Date;
 import java.util.logging.Logger;
 
 /**
@@ -38,8 +37,8 @@ import java.util.logging.Logger;
  */
 @Cache
 @Entity
-class GaeUserCounter {
-    static final Logger LOG = Logger.getLogger(GaeUserCounter.class.getName());
+class UserCounter {
+    static final Logger LOG = Logger.getLogger(UserCounter.class.getName());
 
     static final long COUNTER_ID = 1L;
 
@@ -48,23 +47,15 @@ class GaeUserCounter {
 
     private int count;
 
-    private Date lastModified;
-
-    GaeUserCounter() {
+    UserCounter() {
         id = COUNTER_ID;
-        lastModified = new Date(0L);
     }
 
-    public int getCount() {
+    int getCount() {
         return count;
     }
 
-    public void delta(long delta) {
+    void delta(int delta) {
         this.count += delta;
-        this.lastModified = new Date();
-    }
-
-    public Date getLastModified() {
-        return lastModified;
     }
 }

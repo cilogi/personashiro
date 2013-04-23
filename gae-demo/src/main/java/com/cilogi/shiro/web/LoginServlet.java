@@ -74,11 +74,6 @@ public class LoginServlet extends BaseServlet {
             try {
                 personaLogin.login(personaToken);
                 SavedRequest savedRequest = WebUtils.getAndClearSavedRequest(request);
-                /*
-                String redirectUrl = (savedRequest == null) ? "/index.html" : savedRequest.getRequestUrl();
-                LOG.info("redirect to " + ((savedRequest == null) ? "home" : redirectUrl));
-                response.sendRedirect(response.encodeRedirectURL(redirectUrl));
-                */
                 String redirectUrl = (savedRequest == null) ? null : savedRequest.getRequestUrl();
                 if (redirectUrl != null) {
                     response.sendRedirect(response.encodeRedirectURL(redirectUrl));
