@@ -71,8 +71,6 @@
 
 <script>
 $(document).ready(function() {
-    navigator.id.logout();
-    navigator.id.request();
 
     navigator.id.watch({
       loggedInUser: shiro.user,
@@ -85,6 +83,8 @@ $(document).ready(function() {
             shiro.status.clearStatus();
         }
     });
+    navigator.id.request();
+
 });
 </script>
 
