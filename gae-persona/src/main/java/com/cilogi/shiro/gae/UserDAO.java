@@ -31,48 +31,39 @@ import java.util.Set;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
-
-public class UserDAO implements IPersonaUserDAO {
+/**
+ * This is a demonstration of how to interface a user class to Persona
+ * and the App Engine datastore.  In practice the class used would have to be
+ * a sub-class of GaeUser, or based on something completely different.
+ */
+public class UserDAO extends BaseDAO<GaeUser> implements IPersonaUserDAO {
 
 
     static {
         ObjectifyService.register(GaeUser.class);
     }
 
-    public UserDAO() {}
+    public UserDAO() {
+        super(GaeUser.class);
+    }
 
     @Override
     public GaeUser get(String emailAddress) {
         Preconditions.checkNotNull(emailAddress, "Email address can't be null");
-        GaeUser db = ofy().load().key(Key.create(GaeUser.class, emailAddress)).get();
-        return db;
+        return super.get(emailAddress);
 
     }
 
     @Override
     public GaeUser create(String emailAddress, Set<String> roles, Set<String> permissions) {
         GaeUser user = new GaeUser(emailAddress, roles, permissions);
-        save(user);
+        put(user);
         new UserCounterDAO().inc(1);
         return user;
     }
 
-    /**
-     * Save a user.  Its assumed that the user isn't currently in the database, otherwise
-     * the counts will be off
-     * @param user  the user to save
-     * @return  A pointer to the user, for chaining.
-     */
-    public GaeUser save(GaeUser user) {
-        Preconditions.checkNotNull(user, "User can't be null");
-        ofy().save().entity(user).now();
-        return user;
+    public void delete(GaeUser user) {
+        delete(user.getEmailAddress());
     }
 
-    public GaeUser delete(GaeUser user) {
-        Preconditions.checkNotNull(user, "User can't be null");
-        ofy().delete().keys(Key.create(GaeUser.class, user.getEmailAddress()));
-        new UserCounterDAO().inc(-1);
-        return user;
-    }
 }

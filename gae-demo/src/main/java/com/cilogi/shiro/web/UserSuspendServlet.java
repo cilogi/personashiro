@@ -70,7 +70,7 @@ public class UserSuspendServlet extends BaseServlet {
                 } else {
                     if (isCurrentUserAdmin()) {
                         user.setSuspended(isSuspend);
-                        dao.save(user);
+                        dao.put(user);
                         issueJson(response, HTTP_STATUS_OK,
                                 MESSAGE, isSuspend
                                         ? "User " + userName + " is suspended"

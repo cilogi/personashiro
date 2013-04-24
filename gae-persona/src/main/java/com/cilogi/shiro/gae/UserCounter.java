@@ -24,8 +24,7 @@ package com.cilogi.shiro.gae;
 import com.googlecode.objectify.annotation.Cache;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
-
-import java.util.logging.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This is a singleton, just holding a count of the number
@@ -38,7 +37,7 @@ import java.util.logging.Logger;
 @Cache
 @Entity
 class UserCounter {
-    static final Logger LOG = Logger.getLogger(UserCounter.class.getName());
+    static final org.slf4j.Logger LOG = LoggerFactory.getLogger(UserCounter.class);
 
     static final long COUNTER_ID = 1L;
 

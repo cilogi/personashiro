@@ -23,15 +23,15 @@ package com.cilogi.shiro.gae.aop;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
-import java.util.logging.Logger;
 
 /**
  * Make Shiro AOP compatible with Guice, which uses the AOPAlliance interface
  */
 public class ShiroMethodInterceptor implements MethodInterceptor {
-    static final Logger LOG = Logger.getLogger(ShiroMethodInterceptor.class.getName());
+    static final org.slf4j.Logger LOG = LoggerFactory.getLogger(ShiroMethodInterceptor.class);
 
     private final org.apache.shiro.aop.MethodInterceptor methodInterceptor;
 
