@@ -24,12 +24,12 @@ import com.google.common.base.Preconditions;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
-
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class PersonaCredentialsMatcher implements CredentialsMatcher {
-    static final Logger LOG = Logger.getLogger(PersonaCredentialsMatcher.class.getName());
+    static final Logger LOG = LoggerFactory.getLogger(PersonaCredentialsMatcher.class.getName());
 
     public PersonaCredentialsMatcher() {}
 

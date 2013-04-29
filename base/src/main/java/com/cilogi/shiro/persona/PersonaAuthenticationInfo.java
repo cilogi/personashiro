@@ -24,12 +24,12 @@ import com.google.common.base.Preconditions;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
-
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class PersonaAuthenticationInfo implements AuthenticationInfo {
-    static final Logger LOG = Logger.getLogger(PersonaAuthenticationInfo.class.getName());
+    static final Logger LOG = LoggerFactory.getLogger(PersonaAuthenticationInfo.class);
 
     public final String authToken;
     private final String principal;

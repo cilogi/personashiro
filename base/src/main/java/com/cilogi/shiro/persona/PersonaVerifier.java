@@ -24,17 +24,18 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.Maps;
 import com.google.common.io.ByteStreams;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Map;
-import java.util.logging.Logger;
 
 
 class PersonaVerifier {
-    static final Logger LOG = Logger.getLogger(PersonaVerifier.class.getName());
+    static final Logger LOG = LoggerFactory.getLogger(PersonaVerifier.class);
 
     static final String VERIFY_URL = "https://verifier.login.persona.org/verify";
     static final String STATUS_FIELD = "status";
@@ -67,7 +68,7 @@ class PersonaVerifier {
         try {
             return URLEncoder.encode(s, "utf-8");
         } catch (UnsupportedEncodingException e) {
-            LOG.warning("Error encoding: " + s + ": " + e.getMessage());
+            LOG.warn("Error encoding: " + s + ": " + e.getMessage());
             return s;
         }
     }

@@ -261,7 +261,9 @@
         $("#signIn").click(function(e) {
             e.preventDefault();
             startSpin();
-            navigator.id.request();
+            navigator.id.request({
+                siteName: "Cilogi"
+            });
             return false;
         });
 

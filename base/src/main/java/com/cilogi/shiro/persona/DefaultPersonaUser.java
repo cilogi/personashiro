@@ -20,7 +20,6 @@
 
 package com.cilogi.shiro.persona;
 
-import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

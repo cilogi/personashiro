@@ -22,13 +22,14 @@ package com.cilogi.shiro.persona;
 
 import com.google.common.base.Preconditions;
 import org.apache.shiro.authc.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
-import java.util.logging.Logger;
 
 
 public class PersonaAuthenticationToken implements HostAuthenticationToken, RememberMeAuthenticationToken {
-    static final Logger LOG = Logger.getLogger(PersonaAuthenticationToken.class.getName());
+    static final Logger LOG = LoggerFactory.getLogger(PersonaAuthenticationToken.class);
 
     private final String token;
     private String principal;

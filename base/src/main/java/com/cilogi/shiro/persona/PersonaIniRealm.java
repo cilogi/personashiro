@@ -24,12 +24,11 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.realm.text.IniRealm;
-
-import java.util.logging.Logger;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PersonaIniRealm extends IniRealm {
-    static final Logger LOG = Logger.getLogger(PersonaIniRealm.class.getName());
+    static final Logger LOG = LoggerFactory.getLogger(PersonaIniRealm.class.getName());
 
     public PersonaIniRealm() {
         this("classpath:shiro.ini");
