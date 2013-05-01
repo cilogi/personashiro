@@ -21,10 +21,7 @@
 
 package com.cilogi.shiro.guice;
 
-import com.cilogi.shiro.web.LoginServlet;
-import com.cilogi.shiro.web.StatusServlet;
-import com.cilogi.shiro.web.UserListServlet;
-import com.cilogi.shiro.web.UserSuspendServlet;
+import com.cilogi.shiro.web.*;
 import com.cilogi.util.ShiroFreemarkerServlet;
 import com.google.appengine.tools.appstats.AppstatsFilter;
 import com.google.appengine.tools.appstats.AppstatsServlet;
@@ -66,7 +63,7 @@ public class ServeModule extends ServletModule {
         serve(userBaseUrl + "/status").with(StatusServlet.class);
         serve(userBaseUrl + "/list").with(UserListServlet.class);
         serve(userBaseUrl + "/suspend").with(UserSuspendServlet.class);
-
+        serve("/wake").with(WakeServlet.class);
         serve("/appstats/*").with(AppstatsServlet.class);
     }
 
