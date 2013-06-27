@@ -63,7 +63,7 @@ public class ServeModule extends ServletModule {
         serve(userBaseUrl + "/status").with(StatusServlet.class);
         serve(userBaseUrl + "/list").with(UserListServlet.class);
         serve(userBaseUrl + "/suspend").with(UserSuspendServlet.class);
-        serve("/wake").with(WakeServlet.class);
+        serve("/cron/wake").with(WakeServlet.class);
         serve("/appstats/*").with(AppstatsServlet.class);
     }
 

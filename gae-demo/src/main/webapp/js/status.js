@@ -45,7 +45,7 @@ shiro.status = (function(log) {
 
         if (data) {
             log("Saved status");
-            onSuccess(data, 'success');
+            onSuccess(data);
         }  else {
             log("Ajax status");
             $.ajax(shiro.userBaseUrl+"/status", {
@@ -53,7 +53,7 @@ shiro.status = (function(log) {
                 dataType: "json",
                 success: function(data, status) {
                     setStatus(data);
-                    onSuccess(data, status);
+                    onSuccess(data);
                 },
                 error: function(xhr) {
                     clearStatus();

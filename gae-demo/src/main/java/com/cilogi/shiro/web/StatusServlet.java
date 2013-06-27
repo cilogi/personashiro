@@ -51,25 +51,27 @@ public class StatusServlet extends BaseServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             Subject subject = SecurityUtils.getSubject();
-            boolean isKnown = subject.isAuthenticated() || subject.isRemembered();
-            if (isKnown) {
-                String name = subject.getPrincipal().toString();
+            String email = getPrincipal(subject);
+            boolean isAuthenticated = (subject != null) && subject.isAuthenticated();
+            boolean isAdmin = subject != null && hasRole(subject, "admin");
 
-                issueJson(response, HTTP_STATUS_OK,
-                        MESSAGE, "known",
-                        "name", name,
-                        "authenticated", Boolean.toString(subject.isAuthenticated()),
-                        "admin", Boolean.toString(hasRole(subject, "admin")));
-            } else {
-                issueJson(response, HTTP_STATUS_OK,
-                        MESSAGE, "unknown",
-                        "name", "",
-                        "authenticated", "false",
-                        "admin", "false");
-            }
+            issueJson(response, HTTP_STATUS_OK,
+                    "email", email,
+                    "isAuthenticated", isAuthenticated,
+                    "isAdmin", isAdmin);
         } catch (Exception e) {
             issue(MIME_TEXT_PLAIN, HTTP_STATUS_INTERNAL_SERVER_ERROR,
                   "Internal error getting status: " + e.getMessage(), response);
+        }
+    }
+
+    private static String getPrincipal(Subject subject) {
+        if (subject == null) {
+            return null;
+        } else {
+            boolean isKnown = subject.isAuthenticated() || subject.isRemembered();
+            Object principal = subject.getPrincipal();
+            return (principal == null || !isKnown) ? "" : principal.toString();
         }
     }
 

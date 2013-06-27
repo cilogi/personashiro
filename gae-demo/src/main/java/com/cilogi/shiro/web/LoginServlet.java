@@ -82,9 +82,9 @@ public class LoginServlet extends BaseServlet {
                     String principal = (String)subject.getPrincipal();
                     issueJson(response, HTTP_STATUS_OK,
                             MESSAGE, "known",
-                            "name", principal,
-                            "authenticated", Boolean.toString(subject.isAuthenticated()),
-                            "admin", Boolean.toString(hasRole(subject, "admin")));
+                            "email", principal,
+                            "isAuthenticated", subject.isAuthenticated(),
+                            "isAdmin", hasRole(subject, "admin"));
                 }
             } catch (AuthenticationException e) {
                 LOG.info("Authorization failure: " + e.getMessage());
