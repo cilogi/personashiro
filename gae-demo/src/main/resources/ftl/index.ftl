@@ -8,26 +8,33 @@
 
 <body>
 
-<div id="spinner"  style="position: absolute; top: 90px; left: 50%;">
-</div>
-
-<div class="topbar" data-scrollspy="scrollspy">
-    <div class="topbar-inner">
+<div class="navbar navbar-inverse navbar-fixed-top">
+  <div class="navbar-inner">
         <div class="container">
             <a class="brand" href="#">PersonaShiro</a>
-            <ul class="nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#why">Why</a></li>
-                <li><a href="#how">How</a></li>
-                <li><a href="#shiro">Shiro</a></li>
-                <li><a id="user" class="shiro-user" style="color:yellow" href="/protected.ftl">User</a></li>
-                <li><a id="admin" class="shiro-user" style="color:red" href="/listUsers.ftl">Admin</a></li>
-            </ul>
-            <#include "inc/loginoutbutton.ftl">
+            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li><a href="#why">Why</a></li>
+                    <li><a href="#how">How</a></li>
+                    <li><a href="#shiro">Shiro</a></li>
+                    <li><a id="user" class="shiro-user" style="color:yellow" href="/protected.ftl">User</a></li>
+                    <li><a id="admin" class="shiro-user" style="color:red" href="/listUsers.ftl">Admin</a></li>
+                </ul>
+                <#include "inc/loginoutbutton.ftl">
+            </div>
         </div>
     </div>
 </div>
 
+
+<div id="spinner"  style="position: absolute; top: 90px; left: 50%;">
+</div>
 
 <div class="container">
 

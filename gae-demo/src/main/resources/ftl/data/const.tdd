@@ -1,3 +1,4 @@
 userBaseUrl : "/user/admin"
 #staticBaseUrl : "http://static.personashiro.appspot.com/"
 staticBaseUrl : ""
+develop : true

@@ -4,8 +4,9 @@
 
 <meta charset="utf-8">
 <title>Shiro and Persona on GAE</title>
-<meta name="description" content="">
-<meta name="author" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Demo of Mozilla Persona and Shiro">
+<meta name="author" content="Tim Niblett">
 
 <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
 <!--[if lt IE 9]>
@@ -17,15 +18,12 @@
 
 <!-- Le styles -->
 <link href="css/bootstrap.css" type="text/css" rel="stylesheet">
-<link href="assets/css/docs.css" type="text/css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" type="text/css" rel="stylesheet">
 <link href="css/persona-buttons.css" type="text/css" rel="stylesheet">
 <link href="css/local.css" type="text/css" rel="stylesheet">
 <link href="assets/js/google-code-prettify/prettify.css" type="text/css" rel="stylesheet">
 
 <style type="text/css">
-body {
-  padding-top: 60px;
-}
 
 #spinner {
  position: absolute; top: 90px; left: 50%;
@@ -60,31 +58,38 @@ body {
 
 <body>
 
-<div id="spinner"  style="position: absolute; top: 90px; left: 50%;">
-</div>
-
-<div class="topbar" data-scrollspy="scrollspy">
-    <div class="topbar-inner">
+<div class="navbar navbar-inverse navbar-fixed-top">
+  <div class="navbar-inner">
         <div class="container">
             <a class="brand" href="#">PersonaShiro</a>
-            <ul class="nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#why">Why</a></li>
-                <li><a href="#how">How</a></li>
-                <li><a href="#shiro">Shiro</a></li>
-                <li><a id="user" class="shiro-user" style="color:yellow" href="/protected.ftl">User</a></li>
-                <li><a id="admin" class="shiro-user" style="color:red" href="/listUsers.ftl">Admin</a></li>
-            </ul>
+            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li><a href="#why">Why</a></li>
+                    <li><a href="#how">How</a></li>
+                    <li><a href="#shiro">Shiro</a></li>
+                    <li><a id="user" class="shiro-user" style="color:yellow" href="/protected.ftl">User</a></li>
+                    <li><a id="admin" class="shiro-user" style="color:red" href="/listUsers.ftl">Admin</a></li>
+                </ul>
 <ul class="nav secondary-nav shiro-guest">
     <li><a id="signIn" href="#"><img src="../images/plain_sign_in_red.png" alt="Sign in with Persona"></a></li>
 </ul>
 <ul class="nav secondary-nav shiro-user">
    <li><a id="signOut" href="/logout">Sign Out <span class="shiro-principal"></span></a></li>
 </ul>
+            </div>
         </div>
     </div>
 </div>
 
+
+<div id="spinner"  style="position: absolute; top: 90px; left: 50%;">
+</div>
 
 <div class="container">
 
@@ -236,24 +241,33 @@ body {
 </footer>
 </body>
 
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<!--
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+-->
 <script src="https://login.persona.org/include.js"></script>
 
+<!--
 <script src="js/lib/jquery.tmpl.min.js"></script>
 <script src="js/lib/jquery.validate.min.js"></script>
+-->
+
 <script src="js/lib/spin.js"></script>
 <script src="js/lib/jquery.busy.min.js"></script>
 <script src="js/lib/jquery.blockUI.js"></script>
 
 <script src="assets/js/google-code-prettify/prettify.js"></script>
 
+<script src="js/bootstrap/bootstrap.js"></script>
+<!--
 <script src="js/bootstrap/bootstrap-scrollspy.js"></script>
 <script src="js/bootstrap/bootstrap-modal.js"></script>
-
+-->
 <script src="js/init.js"></script>
 <script src="js/spin.js"></script>
 <script src="js/log.js"></script>
 <script src="js/status.js"></script>
+<script src="js/personaWatch.js"></script>
 
 <script type="text/javascript">
 
