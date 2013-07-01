@@ -1,3 +1,4 @@
-var shiro = shiro || {}
-
-shiro.userBaseUrl = "/user/admin";
+define({
+    userBaseUrl : "/user/admin",
+    user : null
+});

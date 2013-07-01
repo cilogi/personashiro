@@ -12,9 +12,9 @@
 
     <modules>
         <module>base</module>
+        <module>gae-persona</module>
         <module>gae-demo</module>
         <module>micro-demo</module>
-        <module>gae-persona</module>
     </modules>
 
     <dependencies>

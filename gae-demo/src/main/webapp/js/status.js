@@ -1,5 +1,5 @@
 
-shiro.status = (function(log) {
+define(['jquery', 'init', 'log'], function($, shiro, log) {
 
     function successDefault() {}
 
@@ -24,4 +24,4 @@ shiro.status = (function(log) {
 
     return runStatus;
 
-})(shiro.log);
+});

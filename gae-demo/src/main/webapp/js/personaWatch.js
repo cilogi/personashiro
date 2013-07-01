@@ -1,6 +1,5 @@
-shiro.personaWatch =
 
-(function () {
+define(['jquery', 'log', 'persona'], function ($, log) {
     var currentUser = null,
         isWatching = false;
 
@@ -73,7 +72,7 @@ shiro.personaWatch =
                 options.setCSS({email: null});
                 options.finalize();
                 navigator.id.logout();
-                alert("logout failure" + res);
+                log("logout failure" + res);
             }
         });
     }
@@ -84,4 +83,4 @@ shiro.personaWatch =
         watch: watch
     }
 
-})();
+});

@@ -184,6 +184,5 @@
 <#include "inc/copyright.ftl">
 </body>
 <#include "inc/_foot.ftl">
-<script src="js/script.js"></script>
 </html>
 

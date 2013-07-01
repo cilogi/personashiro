@@ -1,31 +1,6 @@
 
-<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-<!--
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
--->
-<script src="https://login.persona.org/include.js"></script>
 
-<!--
-<script src="${staticBaseUrl}js/lib/jquery.tmpl.min.js"></script>
-<script src="${staticBaseUrl}js/lib/jquery.validate.min.js"></script>
--->
-
-<script src="${staticBaseUrl}js/lib/spin.js"></script>
-<script src="${staticBaseUrl}js/lib/jquery.busy.min.js"></script>
-<script src="${staticBaseUrl}js/lib/jquery.blockUI.js"></script>
-
-<script src="${staticBaseUrl}assets/js/google-code-prettify/prettify.js"></script>
-
-<script src="${staticBaseUrl}js/bootstrap/bootstrap.js"></script>
-<!--
-<script src="${staticBaseUrl}js/bootstrap/bootstrap-scrollspy.js"></script>
-<script src="${staticBaseUrl}js/bootstrap/bootstrap-modal.js"></script>
--->
-<script src="${staticBaseUrl}js/init.js"></script>
-<script src="${staticBaseUrl}js/spin.js"></script>
-<script src="${staticBaseUrl}js/log.js"></script>
-<script src="${staticBaseUrl}js/status.js"></script>
-<script src="${staticBaseUrl}js/personaWatch.js"></script>
+<script data-main="js/main.js" src="js/lib/require.js"></script>
 
 <script type="text/javascript">
 

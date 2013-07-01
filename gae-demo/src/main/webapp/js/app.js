@@ -1,4 +1,4 @@
-(function () {
+define(['jquery', 'spin', 'status', 'personaWatch', 'log', 'jquery.blockUI', 'persona'], function ($, spinner, runStatus, personaWatch, log) {
     var spin = null;
 
     function stopSpin() {
@@ -9,7 +9,7 @@
     }
 
     function startSpin() {
-        spin = shiro.spin.start($("#spinner"));
+        spin = spinner.start($("#spinner"));
     }
 
     function setCSS(data) {
@@ -37,17 +37,17 @@
         });
     }
 
-    $(document).ready(function () {
+    function init() {
 
         $(document).ajaxStart(doBlock).ajaxStop($.unblockUI);
 
         startSpin();
 
-        shiro.status({
+        runStatus({
             success: function(data) {
                 var email = data.email;
-                shiro.personaWatch.setCurrentUser(email);
-                shiro.personaWatch.watch({setCSS: setCSS, finalize: stopSpin});
+                personaWatch.setCurrentUser(email);
+                personaWatch.watch({setCSS: setCSS, finalize: stopSpin});
                 setCSS({email: email});
                 stopSpin();
             },
@@ -73,7 +73,7 @@
         $("#signIn").click(function (e) {
             e.preventDefault();
             startSpin();
-            shiro.personaWatch.setCurrentUser(null);
+            personaWatch.setCurrentUser(null);
             navigator.id.request({
                 siteName: "Cilogi"
             });
@@ -83,11 +83,13 @@
         $("#signOut").click(function (e) {
             e.preventDefault();
             startSpin();
-            shiro.personaWatch.setCurrentUser(null);
+            personaWatch.setCurrentUser(null);
             navigator.id.logout();
             return false;
         });
 
-    });
+    };
 
-})();
+    return init;
+
+});
